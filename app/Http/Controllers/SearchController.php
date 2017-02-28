@@ -574,6 +574,15 @@ class SearchController extends Controller
 					              	$RATIO_CurrentPrice_By_SQFT = 0;
 					              }
 
+					              if(isset($listing['CurrentPrice']) && $listing['CurrentPrice']!= '') 
+					              {
+					              	$CurrentPrice = $listing['CurrentPrice'];
+					              }
+					              else
+					              {
+					              	$CurrentPrice = 0;
+					              }
+
 					              
 					              
 
@@ -850,7 +859,7 @@ class SearchController extends Controller
 									           $is_property_financial_detail->AssociationFee1MQYN = $listing['AssociationFee1MQYN']; 
 									           $is_property_financial_detail->AVMYN = $AVMYN; 
 
-									           $is_property_financial_detail->CurrentPrice = $listing['CurrentPrice']; 
+									           $is_property_financial_detail->CurrentPrice = $CurrentPrice; 
 
 									           $is_property_financial_detail->EarnestDeposit = $EarnestDeposit; 
 									           $is_property_financial_detail->FinancingConsidered = $listing['FinancingConsidered']; 
@@ -881,7 +890,7 @@ class SearchController extends Controller
 									           $propertyfinancialdetail->AssociationFee1MQYN = $listing['AssociationFee1MQYN']; 
 									           $propertyfinancialdetail->AVMYN = $AVMYN; 
 
-									           $propertyfinancialdetail->CurrentPrice = $listing['CurrentPrice']; 
+									           $propertyfinancialdetail->CurrentPrice = $CurrentPrice; 
 
 									           $propertyfinancialdetail->EarnestDeposit = $EarnestDeposit; 
 									           $propertyfinancialdetail->FinancingConsidered = $listing['FinancingConsidered']; 
