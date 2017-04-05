@@ -1,0 +1,4 @@
+scheduler_dev V1.0 released to feature
+		1) created city_list table
+		2) created scheduler for inserting city information into table
+

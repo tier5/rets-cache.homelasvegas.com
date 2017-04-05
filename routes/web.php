@@ -16,3 +16,5 @@ Route::get('/', function () {
 });
 Route::get('/ret_search', array('as' => 'ret-search', 'uses' => 'SearchController@index'));
 Route::post('/do_search/{offset}', array('as' => 'do-search', 'uses' => 'SearchController@do_search'));
+
+Route::get('/test', array('as' => 'test', 'uses' => 'SearchController@test'));
