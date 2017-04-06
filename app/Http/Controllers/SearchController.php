@@ -14,6 +14,8 @@ use App\PropertyFinancialDetail;
 use App\PropertyInteriorFeature;
 use App\PropertyLocation;
 use App\PropertyLatLong;
+use App\Citylist;
+use App\Jobs\InserSearchList;
 
 class SearchController extends Controller
 {
@@ -23,6 +25,14 @@ class SearchController extends Controller
     	return view('rets.search', ['data'=>$data]);
     }
 
+    public function test(){
+   		/*$cityList = Citylist::orderBy('id','desc')->get();
+   		 $this->dispatch(new Searchresultinsert());
+   		dd($cityList);*/
+   	echo $message='hello';
+   	$this->dispatch(new InserSearchList());
+           
+    }
     public function do_search(Request $request,$offset)
     {
     	$search_result = array();
