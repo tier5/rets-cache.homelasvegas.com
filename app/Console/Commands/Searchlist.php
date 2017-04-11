@@ -63,7 +63,8 @@ class Searchlist extends Command
         $connect = $rets->Connect($rets_login_url, $rets_username, $rets_password);
         if($connect)
         {
-            $this->dispatch(new InserSearchList());
+             $job = (new InserSearchList());
+             $this->dispatch($job);
             $city ='ARMAGOSA';
             $query="(City={$city})";
             $data['city'] = $city;
@@ -1117,7 +1118,7 @@ class Searchlist extends Command
 
                     }
 
-            dd($search_result);
+            //dd($search_result);
 
         }
         else{

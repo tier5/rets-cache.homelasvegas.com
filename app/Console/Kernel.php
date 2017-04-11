@@ -26,7 +26,8 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')
         //          ->hourly();
-        $schedule->command('store:searchresult')->everyFiveMinutes();
+        /*$schedule->command('queue:work')->cron('* * * * * *');*/
+        $schedule->command('store:searchresult')->everyMinute();
     }
 
     /**

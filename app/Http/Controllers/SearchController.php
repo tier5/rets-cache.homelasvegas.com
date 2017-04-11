@@ -30,7 +30,9 @@ class SearchController extends Controller
    		 $this->dispatch(new Searchresultinsert());
    		dd($cityList);*/
    	echo $message='hello';
-   	$this->dispatch(new InserSearchList());
+   //$this->dispatch(new InserSearchList());
+  $job = (new InserSearchList());
+  $this->dispatch($job);
            
     }
     public function do_search(Request $request,$offset)
