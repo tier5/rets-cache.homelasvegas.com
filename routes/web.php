@@ -29,4 +29,5 @@ Route::group(array('prefix' => 'api'), function() {
 
     //Route::controller('rets/v1','APIController');
      Route::resource('rets/v1/','APIController');
+     Route::get('rets/v1/advance_search','APIController@advance_search');
 });

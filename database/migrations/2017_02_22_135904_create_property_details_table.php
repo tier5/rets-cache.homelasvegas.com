@@ -27,6 +27,7 @@ class CreatePropertyDetailsTable extends Migration
             $table->char('StreetNumber',25);
             $table->char('StreetName',50);
             $table->char('City',32);
+            $table->char('PostalCode',32);
             
 
             // $table->char('Area',75);
