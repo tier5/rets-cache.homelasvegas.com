@@ -109,7 +109,51 @@ class APIController extends Controller
           $acres=$request['acres'];
           $max_days_listed=$request['max_days_listed'];
           $sort_by=$request['sort_by'];
+          $sortbyfield='created_at';
+            $sorttype='DESC';
+          if($sort_by=='listing_desc'){
+            $sortbyfield='created_at';
+            $sorttype='DESC';
+          }
+          elseif($sort_by=='listing_asc'){
+            $sortbyfield='created_at';
+            $sorttype='ASC';
+          }
+          elseif($sort_by=='pricing_asc'){
+            $sortbyfield='ListPrice';
+            $sorttype='ASC';
+          }
+          elseif($sort_by=='pricing_desc'){
+            $sortbyfield='ListPrice';
+            $sorttype='DESC';
+          }
+          elseif($sort_by=='bedrooms_asc'){
+            $sortbyfield='BedroomsTotalPossibleNum';
+            $sorttype='ASC';
+          }
+          elseif($sort_by=='bedrooms_desc'){
+            $sortbyfield='BedroomsTotalPossibleNum';
+            $sorttype='DESC';
+          }
+          elseif($sort_by=='bathrooms_asc'){
+            $sortbyfield='BathsTotal';
+            $sorttype='ASC';
+          }
+          elseif($sort_by=='bathrooms_desc'){
+            $sortbyfield='BathsTotal';
+            $sorttype='DESC';
+          }
+          elseif($sort_by=='squarefeet_asc'){
+            $sortbyfield='SqFtTotal';
+            $sorttype='ASC';
+          }
+          elseif($sort_by=='squarefeet_desc'){
+            $sortbyfield='SqFtTotal';
+            $sorttype='DESC';
+          }
+          
           $status=$request['status'];
+          //dd($status);
           $bedrooms=$request['bedrooms'];
           $bathrooms=$request['bathrooms'];
           if(isset($request['result_per_page']) && $request['result_per_page'] != ""){
@@ -117,19 +161,46 @@ class APIController extends Controller
           }else{
             $limit=25;
           }
-          
-         
-
-
             if(isset($offset)){
           $start_page=($offset-1)*$limit;
         }else{
           $offset=0;
         }
-$PropertyLocation = PropertyDetail::whereHas('propertyfeature', function ($newquery) use ($property_type) {$newquery->where('PropertyType', '=',$property_type);})->where('City','=',$city)->where('ListPrice','>=',$min_price)->where('ListPrice','<=',$max_price)
-    ->with(['propertyfeature','propertyadditional','propertyexternalfeature','propertyimage','propertyfinancialdetail','propertyinteriorfeature','propertyinteriorfeature','propertylatlong','propertylocation'])->get();
-    $wordCount = $PropertyLocation->count();
+        $PropertyLocation = PropertyDetail::whereHas('propertyfeature', function ($newquery) use ($property_type) {$newquery->where('PropertyType', '=',$property_type);});
+        if($city!=''){
+            $PropertyLocation = $PropertyLocation->where('City','=',$city);
+        }
+        elseif($min_price!='')
+        {
+            $PropertyLocation = $PropertyLocation->where('ListPrice','>=',$min_price);
+        }
+        elseif($max_price!='')
+        {
+            $PropertyLocation = $PropertyLocation->where('ListPrice','>=',$max_price);
+        }
+        elseif($square_feet!='')
+        {
+            $PropertyLocation = $PropertyLocation->where('SqFtTotal','>=',$square_feet);
+        }
+        elseif($acres!='')
+        {
+            $PropertyLocation = $PropertyLocation->where('NumAcres','>=',$acres);
+        }
+        elseif($bedrooms!='')
+        {
+            $PropertyLocation = $PropertyLocation->where('BedroomsTotalPossibleNum','>=',$bedrooms);
+        }
+        elseif($bathrooms!='')
+        {
+            $PropertyLocation = $PropertyLocation->where('BathsTotal','>=',$bathrooms);
+        }
+        $PropertyLocation = $PropertyLocation->orderBy($sortbyfield,$sorttype);
+        $PropertyLocation = $PropertyLocation->with(['propertyfeature','propertyadditional','propertyexternalfeature','propertyimage','propertyfinancialdetail','propertyinteriorfeature','propertyinteriorfeature','propertylatlong','propertylocation'])->get();
+//$PropertyLocation = PropertyDetail::whereHas('propertyfeature', function ($newquery) use ($property_type) {$newquery->where('PropertyType', '=',$property_type);})->where('City','=',$city)->where('ListPrice','>=',$min_price)->where('ListPrice','<=',$max_price)->where('SqFtTotal','>=',$square_feet)->where('NumAcres','=',$acres)->orderBy($sortbyfield,$sorttype)
+    //->with(['propertyfeature','propertyadditional','propertyexternalfeature','propertyimage','propertyfinancialdetail','propertyinteriorfeature','propertyinteriorfeature','propertylatlong','propertylocation'])->get();
+    //$wordCount = $PropertyLocation->count();
     //dd($wordCount);
+    //dd($PropertyLocation);
         return response()->json($PropertyLocation);
     }
     public function create()
