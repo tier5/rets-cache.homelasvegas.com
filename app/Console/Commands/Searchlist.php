@@ -51,6 +51,8 @@ class Searchlist extends Command
      */
     public function handle()
     {
+
+        
         
         $rets_login_url = "http://rets.las.mlsmatrix.com/rets/login.ashx";
         $rets_username = "neal";
@@ -63,8 +65,8 @@ class Searchlist extends Command
         $connect = $rets->Connect($rets_login_url, $rets_username, $rets_password);
         if($connect)
         {
-             $job = (new InserSearchList());
-             $this->dispatch($job);
+            /* $job = new InserSearchList();
+             $this->dispatch($job);*/
             $city ='ARMAGOSA';
             $query="(City={$city})";
             $data['city'] = $city;

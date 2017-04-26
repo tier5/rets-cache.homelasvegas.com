@@ -4,9 +4,13 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use App\Jobs\InserSearchList;
+//use App\Http\Controllers\SearchController;
 
 class Kernel extends ConsoleKernel
 {
+
+    
     /**
      * The Artisan commands provided by your application.
      *
@@ -14,6 +18,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         'App\Console\Commands\Searchlist',
+        
     ];
 
     /**
@@ -27,7 +32,18 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')
         //          ->hourly();
         /*$schedule->command('queue:work')->cron('* * * * * *');*/
-        $schedule->command('store:searchresult')->everyMinute();
+        //$schedule->command('store:searchresult')->everyMinute();
+         $schedule->call(function () {
+            $check_draw = new InserSearchList();
+        })->dailyAt('00:01');
+
+        /*$schedule->call('App\Http\Controllers\SearchController@test')
+                ->everyMinute();*/
+
+        //$schedule->call('SearchController@test')->dailyAt('00:01');
+
+
+
     }
 
     /**

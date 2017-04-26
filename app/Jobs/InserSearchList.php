@@ -50,6 +50,7 @@ class InserSearchList implements ShouldQueue
 
         $connect = $rets->Connect($rets_login_url, $rets_username, $rets_password);
         if($connect){
+        
          $cityList = Citylist::orderBy('id','desc')->get();
          $count=0;
             foreach($cityList as $list){
@@ -76,6 +77,7 @@ class InserSearchList implements ShouldQueue
 
     public function InsertSearchdata($city){
         
+        //echo $city;
         /***** test *****/
         $search_result = array();
         $data = array();
@@ -126,8 +128,9 @@ class InserSearchList implements ShouldQueue
 
 
                  $search = $rets->SearchQuery("Property","Listing",$query,array("StandardNames" => 0,'Limit' =>$limit,'Offset'=>$offset));
+                  /*$search = $rets->SearchQuery("Property","Listing",$query,array("StandardNames" => 0));*/
                     $result_count=$rets->TotalRecordsFound();
-                    //echo $result_count; exit;
+                    /*echo 'city'.$city.'----'.$result_count;exit;*/
                     $total_records= $pages=ceil($result_count/$limit);
                     $search_result=array();
                     $key=0;
@@ -663,6 +666,7 @@ class InserSearchList implements ShouldQueue
                                                $is_property->StreetName   = $listing['StreetName']; 
                                                $is_property->City         = $data['city'];
                                                $is_property->MLSNumber    = $listing['MLSNumber'];
+                                               $is_property->PostalCode    = $listing['PostalCode'];
                                                $is_property->save();
 
 
@@ -688,6 +692,7 @@ class InserSearchList implements ShouldQueue
                                                $property->StreetName   = $listing['StreetName']; 
                                                $property->City         = $data['city'];
                                                $property->MLSNumber    = $listing['MLSNumber'];
+                                               $property->PostalCode    = $listing['PostalCode'];
                                                $property->save();
                                             }
 
