@@ -102,6 +102,7 @@ class APIController extends Controller
           }
           //dd($property_type);
           $property_sub_type=$request['property_sub_type'];
+          //dd($property_sub_type);
           $city=$request['city'];
           $min_price=$request['min_price'];
           $max_price=$request['max_price'];
@@ -158,6 +159,7 @@ class APIController extends Controller
           $bathrooms=$request['bathrooms'];
           if(isset($request['result_per_page']) && $request['result_per_page'] != ""){
             $limit=$request['result_per_page'];
+            //dd($limit);
           }else{
             $limit=25;
           }
@@ -168,7 +170,7 @@ class APIController extends Controller
         }
         $PropertyLocation = PropertyDetail::whereHas('propertyfeature', function ($newquery) use ($property_type) {$newquery->where('PropertyType', '=',$property_type);});
         if($city!=''){
-            $PropertyLocation = $PropertyLocation->where('City','=',$city);
+            $PropertyLocation = $PropertyLocation->wherein('City',$city);
         }
         elseif($min_price!='')
         {
@@ -194,13 +196,41 @@ class APIController extends Controller
         {
             $PropertyLocation = $PropertyLocation->where('BathsTotal','>=',$bathrooms);
         }
+        elseif($status!='')
+        {
+           $PropertyLocation = $PropertyLocation->whereIn('Status',$status); 
+        }
+        elseif($property_sub_type!='')
+        {
+            $PropertyLocation = $PropertyLocation->whereHas('propertyfeature', function ($new2query) use ($property_sub_type) {$new2query->whereIn('PropertySubType',$property_sub_type);});
+        }
         $PropertyLocation = $PropertyLocation->orderBy($sortbyfield,$sorttype);
-        $PropertyLocation = $PropertyLocation->with(['propertyfeature','propertyadditional','propertyexternalfeature','propertyimage','propertyfinancialdetail','propertyinteriorfeature','propertyinteriorfeature','propertylatlong','propertylocation'])->get();
+        $PropertyLocation = $PropertyLocation->with(['propertyfeature','propertyadditional','propertyexternalfeature','propertyimage','propertyfinancialdetail','propertyinteriorfeature','propertyinteriorfeature','propertylatlong','propertylocation'])->limit($limit)->offset($offset)->get();
 //$PropertyLocation = PropertyDetail::whereHas('propertyfeature', function ($newquery) use ($property_type) {$newquery->where('PropertyType', '=',$property_type);})->where('City','=',$city)->where('ListPrice','>=',$min_price)->where('ListPrice','<=',$max_price)->where('SqFtTotal','>=',$square_feet)->where('NumAcres','=',$acres)->orderBy($sortbyfield,$sorttype)
     //->with(['propertyfeature','propertyadditional','propertyexternalfeature','propertyimage','propertyfinancialdetail','propertyinteriorfeature','propertyinteriorfeature','propertylatlong','propertylocation'])->get();
-    //$wordCount = $PropertyLocation->count();
+    $wordCount = $PropertyLocation->count();
     //dd($wordCount);
     //dd($PropertyLocation);
+        return response()->json($PropertyLocation);
+    }
+    public function property_desc(Request $request,$matrix_unique_id)
+    {
+        //dd('trst');
+        //dd($matrix_unique_id);
+
+
+        $PropertyLocation = PropertyDetail::where('Matrix_Unique_ID','=',$matrix_unique_id);
+        $PropertyLocation = $PropertyLocation->with(['propertyfeature','propertyadditional','propertyexternalfeature','propertyimage','propertyfinancialdetail','propertyinteriorfeature','propertyinteriorfeature','propertylatlong','propertylocation'])->get();
+            //dd($PropertyLocation);
+        return response()->json($PropertyLocation);
+    }
+    public function photo_gallery(Request $request,$matrix_unique_id)
+    {
+        //dd('first');
+        //dd($matrix_unique_id);
+        $PropertyLocation = PropertyDetail::where('Matrix_Unique_ID','=',$matrix_unique_id);
+        $PropertyLocation = $PropertyLocation->with('propertyimage')->get();
+            //dd($PropertyLocation);
         return response()->json($PropertyLocation);
     }
     public function create()
