@@ -29,7 +29,7 @@ class APIController extends Controller
         //dd($request->all());
         //$term=
         $term=$request['search_input'];
-        
+        //dd($term);
         $myArray ="";
         $postal_code="";
         $community="";
@@ -62,7 +62,7 @@ class APIController extends Controller
         //dd($term);
         //dd($myArray[0]);
         //dd($termcity.'$'.$termlisting_address);
-        $PropertyLocation = PropertyDetail:: where('City', '=',$term)->orWhere('MLSNumber','=',$term)->orWhere('StreetNumber','like','%'.$term.'%')->orWhere('StreetName','like','%'.$term.'%')->orWhere('PostalCode','=',$term)->orWhereHas('propertylocation', function ($query) use ($term) {$query->where('CommunityName', '=',$term);})
+        $PropertyLocation = PropertyDetail:: where('City', '=',$termcity)->orWhere('MLSNumber','=',$term)->orWhere('StreetNumber','like','%'.$term.'%')->orWhere('StreetName','like','%'.$term.'%')->orWhere('PostalCode','=',$term)->orWhereHas('propertylocation', function ($query) use ($term) {$query->where('CommunityName', '=',$term);})
     ->with(['propertyfeature','propertyadditional','propertyexternalfeature','propertyimage','propertyfinancialdetail','propertyinteriorfeature','propertyinteriorfeature','propertylatlong','propertylocation'])->get();
         //$PropertyLocation = PropertyDetail:: where('City', '=', $termcity)->orWhere('MLSNumber','=',$termlisting_id)->orWhere('StreetNumber','=',$termstreet_no)->orWhere('StreetName','=',$termstreet_name)->orWhereHas('propertylocation', function ($query) use ($community) {$query->where('CommunityName', '=',$community);})
     //->with(['propertyfeature','propertyadditional','propertyexternalfeature','propertyimage','propertyfinancialdetail','propertyinteriorfeature','propertyinteriorfeature','propertylatlong','propertylocation'])->toSql(); 
@@ -212,13 +212,12 @@ class APIController extends Controller
     //dd($wordCount);
     //dd($PropertyLocation);
         return response()->json($PropertyLocation);
+
     }
     public function property_desc(Request $request,$matrix_unique_id)
     {
         //dd('trst');
         //dd($matrix_unique_id);
-
-
         $PropertyLocation = PropertyDetail::where('Matrix_Unique_ID','=',$matrix_unique_id);
         $PropertyLocation = $PropertyLocation->with(['propertyfeature','propertyadditional','propertyexternalfeature','propertyimage','propertyfinancialdetail','propertyinteriorfeature','propertyinteriorfeature','propertylatlong','propertylocation'])->get();
             //dd($PropertyLocation);
@@ -231,6 +230,77 @@ class APIController extends Controller
         $PropertyLocation = PropertyDetail::where('Matrix_Unique_ID','=',$matrix_unique_id);
         $PropertyLocation = $PropertyLocation->with('propertyimage')->get();
             //dd($PropertyLocation);
+        return response()->json($PropertyLocation);
+    }
+    public function addresssearch(Request $request){
+      //dd($request->all());
+      if(isset($request['result_per_page']) && $request['result_per_page'] != ""){
+            $limit=$request['result_per_page'];
+            //dd($limit);
+          }else{
+            $limit=25;
+          }
+            if(isset($offset)){
+          $start_page=($offset-1)*$limit;
+        }else{
+          $offset=0;
+        }
+      $property_type=$request['property_type'];
+      if($property_type=='RES'){
+            $property_type='Residential';
+          }
+          elseif($property_type=='RNT'){
+            $property_type='Residential Rental';
+          }
+          elseif($property_type=='BLD'){
+            $property_type='Builder';
+          }
+          elseif($property_type=='LND'){
+            $property_type='Vacant/Subdivided Land';
+          }
+          elseif($property_type=='MUL'){
+            $property_type='Multiple Dwelling';
+          }
+          elseif($property_type=='VER'){
+            $property_type='High Rise';
+          }
+          $city=$request['city'];
+          $county=$request['county'];
+          $postal_code=$request['postal_code'];
+          $house_number=$request['house_number'];
+          $house_deriction=$request['house_deriction'];
+          $house_name=$request['house_name'];
+          $PropertyLocation = PropertyDetail::whereHas('propertyfeature', function ($newquery) use ($property_type) {$newquery->where('PropertyType', '=',$property_type);});
+        if($city!=''){
+            
+            $PropertyLocation = $PropertyLocation->wherein('City',$city);
+        }
+        elseif($county!=''){
+
+            $PropertyLocation->whereHas('propertyfeature', function ($new3query) use ($county) {$new3query->whereIn('CountyOrParish',$county);});
+        }
+        
+        elseif($postal_code!='')
+        {
+           
+           $PropertyLocation = $PropertyLocation->whereIn('PostalCode',$postal_code); 
+        }
+        elseif($house_number!='')
+        {
+           
+           $PropertyLocation = $PropertyLocation->whereHas('propertyadditional', function ($new4query) use ($house_number) {$new4query->where('PublicAddress','Like','%' .$house_number. '%');}); 
+        }
+        elseif($house_deriction!='')
+        {
+           
+           $PropertyLocation = $PropertyLocation->whereHas('propertyadditional', function ($new4query) use ($house_number) {$new4query->where('PublicAddress','Like','%' .$house_deriction. '%');}); 
+        }
+        elseif($house_name!='')
+        {
+           
+           $PropertyLocation = $PropertyLocation->whereHas('propertyadditional', function ($new4query) use ($house_number) {$new4query->where('PublicAddress','Like','%' .$house_name. '%');}); 
+        }
+        $PropertyLocation = $PropertyLocation->with(['propertyfeature','propertyadditional','propertyexternalfeature','propertyimage','propertyfinancialdetail','propertyinteriorfeature','propertyinteriorfeature','propertylatlong','propertylocation'])->limit($limit)->offset($offset)->get();
         return response()->json($PropertyLocation);
     }
     public function create()
