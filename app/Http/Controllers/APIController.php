@@ -33,7 +33,7 @@ class APIController extends Controller
         $myArray ="";
         $postal_code="";
         $community="";
-
+        $offset=$request['offset'];
         $termcity=$request['city'];
         //dd($termcity);
         $termlisting_id=$request['listing_id'];
@@ -191,7 +191,36 @@ class APIController extends Controller
     //dd($PropertyLocation);
     return response()->json(['listing' => $PropertyLocation, 'fullcount' => $PropertyLocation_full_count]);
     }
-
+    public function advance_listing(Request $request)
+    {
+          
+          $listing_id=$request['listing_id'];
+          
+          //dd($status);
+          if(isset($request['result_per_page']) && $request['result_per_page'] != ""){
+            $limit=$request['result_per_page'];
+            //dd($limit);
+          }else{
+            $limit=25;
+          }
+            if(isset($offset)){
+          $start_page=($offset-1)*$limit;
+        }else{
+          $offset=0;
+        }
+        $PropertyLocation = PropertyDetail::->where('MLSNumber', '=',$listing_id);
+        
+        $PropertyLocation = $PropertyLocation->with(['propertyfeature','propertyadditional','propertyexternalfeature','propertyimage','propertyfinancialdetail','propertyinteriorfeature','propertyinteriorfeature','propertylatlong','propertylocation'])->limit($limit)->offset($offset)->get();
+        $PropertyLocation_full = $PropertyLocation->with(['propertyfeature','propertyadditional','propertyexternalfeature','propertyimage','propertyfinancialdetail','propertyinteriorfeature','propertyinteriorfeature','propertylatlong','propertylocation'])->get();
+      $PropertyLocation_count=collect($PropertyLocation_full);
+      $PropertyLocation_full_count=$PropertyLocation_count->count(); 
+//$PropertyLocation = PropertyDetail::whereHas('propertyfeature', function ($newquery) use ($property_type) {$newquery->where('PropertyType', '=',$property_type);})->where('City','=',$city)->where('ListPrice','>=',$min_price)->where('ListPrice','<=',$max_price)->where('SqFtTotal','>=',$square_feet)->where('NumAcres','=',$acres)->orderBy($sortbyfield,$sorttype)
+    //->with(['propertyfeature','propertyadditional','propertyexternalfeature','propertyimage','propertyfinancialdetail','propertyinteriorfeature','propertyinteriorfeature','propertylatlong','propertylocation'])->get();
+    $wordCount = $PropertyLocation->count();
+    //dd($wordCount);
+    //dd($PropertyLocation);
+    return response()->json(['listing' => $PropertyLocation, 'fullcount' => $PropertyLocation_full_count]);
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -348,8 +377,7 @@ class APIController extends Controller
         //dd($matrix_unique_id);
         $PropertyLocation = PropertyDetail::where('Matrix_Unique_ID','=',$matrix_unique_id);
         $PropertyLocation = $PropertyLocation->with('propertyimage')->get();
-            //dd($PropertyLocation);
-        return response()->json($property_full_count);
+            dd($PropertyLocation);
         return response()->json($PropertyLocation);
     }
     public function addresssearch(Request $request){

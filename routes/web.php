@@ -34,6 +34,7 @@ Route::group(array('prefix' => 'api'), function() {
      Route::get('rets/v1/property_desc/{matrix_unique_id}','APIController@property_desc');
      Route::get('rets/v1/photo_gallery/{matrix_unique_id}','APIController@photo_gallery');
      Route::get('rets/v1/address_search/','APIController@addresssearch');
+     Route::get('rets/v1/advance_listing/','APIController@advance_listing');
      
 
 });
