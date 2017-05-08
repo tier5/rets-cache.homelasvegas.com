@@ -88,6 +88,8 @@ class SearchController extends Controller
 
 
 				 $search = $rets->SearchQuery("Property","Listing",$query,array("StandardNames" => 0,'Limit' =>$limit,'Offset'=>$offset));
+				 //echo '<pre>';
+				 //print_r($rets->FetchRow($search));exit;
 					$result_count=$rets->TotalRecordsFound();
 					//echo $result_count; exit;
 					$total_records= $pages=ceil($result_count/$limit);
@@ -95,9 +97,9 @@ class SearchController extends Controller
 					$key=0;
 				while ($listing = $rets->FetchRow($search)) 
 				{   
-                     // echo '<pre>';
-					// print_r($listing);
-					// echo '</pre>';
+                     /* echo '<pre>';
+					print_r($listing);
+					 echo '</pre>';exit;*/
 					$search_result[$key]['Matrix_Unique_ID']=$listing['Matrix_Unique_ID'];
 					$search_result[$key]['StreetNumber']=$listing['StreetNumber'];
 					$search_result[$key]['StreetName']=$listing['StreetName'];
@@ -124,10 +126,12 @@ class SearchController extends Controller
 	
    				$photos = $rets->GetObject("Property", "Photo", $listing['Matrix_Unique_ID'], "*", 0);
                //dd($photos);exit;
+
    				$deleteImage = PropertyImage::where('Matrix_Unique_ID', '=', $listing['Matrix_Unique_ID'])->delete();
    				$contentType = $property_image  ='';
    				$content_id = $object_id = $Success = 0;
 				foreach ($photos as $photo) {
+					
 					if(isset($photo['Content-ID']) && $photo['Content-ID']!='')
 					{
 						$content_id = $photo['Content-ID'];

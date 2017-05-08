@@ -128,6 +128,8 @@ class InserSearchList implements ShouldQueue
 
 
                  $search = $rets->SearchQuery("Property","Listing",$query,array("StandardNames" => 0,'Limit' =>$limit,'Offset'=>$offset));
+                 /*echo '<pre>';
+                 print_r($search);*/
                   /*$search = $rets->SearchQuery("Property","Listing",$query,array("StandardNames" => 0));*/
                     $result_count=$rets->TotalRecordsFound();
                     /*echo 'city'.$city.'----'.$result_count;exit;*/
@@ -169,6 +171,7 @@ class InserSearchList implements ShouldQueue
                 $contentType = $property_image  ='';
                 $content_id = $object_id = $Success = 0;
                 foreach ($photos as $photo) {
+                  
                     if(isset($photo['Content-ID']) && $photo['Content-ID']!='')
                     {
                         $content_id = $photo['Content-ID'];
@@ -667,6 +670,9 @@ class InserSearchList implements ShouldQueue
                                                $is_property->City         = $data['city'];
                                                $is_property->MLSNumber    = $listing['MLSNumber'];
                                                $is_property->PostalCode    = $listing['PostalCode'];
+                                               $is_property->PhotoCount    = $listing['PhotoCount'];
+                                               $is_property->VirtualTourLink    = $listing['VirtualTourLink'];
+
                                                $is_property->save();
 
 
@@ -693,6 +699,8 @@ class InserSearchList implements ShouldQueue
                                                $property->City         = $data['city'];
                                                $property->MLSNumber    = $listing['MLSNumber'];
                                                $property->PostalCode    = $listing['PostalCode'];
+                                                $property->PhotoCount    = $listing['PhotoCount'];
+                                               $property->VirtualTourLink    = $listing['VirtualTourLink'];
                                                $property->save();
                                             }
 
