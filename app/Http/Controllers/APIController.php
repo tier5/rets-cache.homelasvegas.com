@@ -59,17 +59,137 @@ class APIController extends Controller
           $termstreet_no="";  
           $termstreet_name="";
         }
+        if(isset($request['result_per_page']) && $request['result_per_page'] != "")
+          {
+            $limit=$request['result_per_page'];
+            //dd($limit);
+          }
+        else
+          {
+            $limit=5;
+          }
+        if(isset($offset))
+          {
+            $start_page=($offset-1)*$limit;
+          }
+        else
+          {
+            $offset=0;
+          }
         //dd($term);
         //dd($myArray[0]);
         //dd($termcity.'$'.$termlisting_address);
-        $PropertyLocation = PropertyDetail:: where('City', '=',$termcity)->orWhere('MLSNumber','=',$term)->orWhere('StreetNumber','like','%'.$term.'%')->orWhere('StreetName','like','%'.$term.'%')->orWhere('PostalCode','=',$term)->orWhereHas('propertylocation', function ($query) use ($term) {$query->where('CommunityName', '=',$term);})
-    ->with(['propertyfeature','propertyadditional','propertyexternalfeature','propertyimage','propertyfinancialdetail','propertyinteriorfeature','propertyinteriorfeature','propertylatlong','propertylocation'])->get();
+       
         //$PropertyLocation = PropertyDetail:: where('City', '=', $termcity)->orWhere('MLSNumber','=',$termlisting_id)->orWhere('StreetNumber','=',$termstreet_no)->orWhere('StreetName','=',$termstreet_name)->orWhereHas('propertylocation', function ($query) use ($community) {$query->where('CommunityName', '=',$community);})
     //->with(['propertyfeature','propertyadditional','propertyexternalfeature','propertyimage','propertyfinancialdetail','propertyinteriorfeature','propertyinteriorfeature','propertylatlong','propertylocation'])->toSql(); 
         //dd($PropertyLocation);
-        return response()->json($PropertyLocation);
-
-
+          $PropertyLocation_full = PropertyDetail:: where('City', '=',$termcity)->orWhere('MLSNumber','=',$term)->orWhere('StreetNumber','like','%'.$term.'%')->orWhere('StreetName','like','%'.$term.'%')->orWhere('PostalCode','=',$term)->orWhereHas('propertylocation', function ($query) use ($term) {$query->where('CommunityName', '=',$term);})
+    ->with(['propertyfeature','propertyadditional','propertyexternalfeature','propertyimage','propertyfinancialdetail','propertyinteriorfeature','propertyinteriorfeature','propertylatlong','propertylocation'])->get();
+      $PropertyLocation_count=collect($PropertyLocation_full);
+      $PropertyLocation_full_count=$PropertyLocation_count->count(); 
+    $PropertyLocation = PropertyDetail:: where('City', '=',$termcity)->orWhere('MLSNumber','=',$term)->orWhere('StreetNumber','like','%'.$term.'%')->orWhere('StreetName','like','%'.$term.'%')->orWhere('PostalCode','=',$term)->orWhereHas('propertylocation', function ($query) use ($term) {$query->where('CommunityName', '=',$term);})
+    ->with(['propertyfeature','propertyadditional','propertyexternalfeature','propertyimage','propertyfinancialdetail','propertyinteriorfeature','propertyinteriorfeature','propertylatlong','propertylocation'])->limit($limit)->offset($offset)->get(); 
+      
+      return response()->json(['listing' => $PropertyLocation, 'fullcount' => $PropertyLocation_full_count]);
+    }
+    public function homepage_listing(Request $request)
+    {
+        
+          
+          $city=$request['city'];
+          $min_price=$request['min_price'];
+          $max_price=$request['max_price'];
+          $square_feet=$request['square_feet'];
+          $max_days_listed=$request['max_days_listed'];
+          $sort_by=$request['sort_by'];
+          $sortbyfield='created_at';
+            $sorttype='DESC';
+          if($sort_by=='listing_desc'){
+            $sortbyfield='created_at';
+            $sorttype='DESC';
+          }
+          elseif($sort_by=='listing_asc'){
+            $sortbyfield='created_at';
+            $sorttype='ASC';
+          }
+          elseif($sort_by=='pricing_asc'){
+            $sortbyfield='ListPrice';
+            $sorttype='ASC';
+          }
+          elseif($sort_by=='pricing_desc'){
+            $sortbyfield='ListPrice';
+            $sorttype='DESC';
+          }
+          elseif($sort_by=='bedrooms_asc'){
+            $sortbyfield='BedroomsTotalPossibleNum';
+            $sorttype='ASC';
+          }
+          elseif($sort_by=='bedrooms_desc'){
+            $sortbyfield='BedroomsTotalPossibleNum';
+            $sorttype='DESC';
+          }
+          elseif($sort_by=='bathrooms_asc'){
+            $sortbyfield='BathsTotal';
+            $sorttype='ASC';
+          }
+          elseif($sort_by=='bathrooms_desc'){
+            $sortbyfield='BathsTotal';
+            $sorttype='DESC';
+          }
+          elseif($sort_by=='squarefeet_asc'){
+            $sortbyfield='SqFtTotal';
+            $sorttype='ASC';
+          }
+          elseif($sort_by=='squarefeet_desc'){
+            $sortbyfield='SqFtTotal';
+            $sorttype='DESC';
+          }
+          
+          $status=$request['status'];
+          //dd($status);
+          if(isset($request['result_per_page']) && $request['result_per_page'] != ""){
+            $limit=$request['result_per_page'];
+            //dd($limit);
+          }else{
+            $limit=25;
+          }
+            if(isset($offset)){
+          $start_page=($offset-1)*$limit;
+        }else{
+          $offset=0;
+        }
+        $PropertyLocation = PropertyDetail::whereHas('propertyfeature', function ($newquery) use ($property_type) {$newquery->where('PropertyType', '=',$property_type);});
+        if($city!=''){
+            $PropertyLocation = $PropertyLocation->wherein('City',$city);
+        }
+        elseif($min_price!='')
+        {
+            $PropertyLocation = $PropertyLocation->where('ListPrice','>=',$min_price);
+        }
+        elseif($max_price!='')
+        {
+            $PropertyLocation = $PropertyLocation->where('ListPrice','>=',$max_price);
+        }
+        elseif($square_feet!='')
+        {
+            $PropertyLocation = $PropertyLocation->where('SqFtTotal','>=',$square_feet);
+        }
+        elseif($status!='')
+        {
+           $PropertyLocation = $PropertyLocation->whereIn('Status',$status); 
+        }
+        
+        $PropertyLocation = $PropertyLocation->orderBy($sortbyfield,$sorttype);
+        $PropertyLocation = $PropertyLocation->with(['propertyfeature','propertyadditional','propertyexternalfeature','propertyimage','propertyfinancialdetail','propertyinteriorfeature','propertyinteriorfeature','propertylatlong','propertylocation'])->limit($limit)->offset($offset)->get();
+        $PropertyLocation_full = $PropertyLocation->with(['propertyfeature','propertyadditional','propertyexternalfeature','propertyimage','propertyfinancialdetail','propertyinteriorfeature','propertyinteriorfeature','propertylatlong','propertylocation'])->get();
+      $PropertyLocation_count=collect($PropertyLocation_full);
+      $PropertyLocation_full_count=$PropertyLocation_count->count(); 
+//$PropertyLocation = PropertyDetail::whereHas('propertyfeature', function ($newquery) use ($property_type) {$newquery->where('PropertyType', '=',$property_type);})->where('City','=',$city)->where('ListPrice','>=',$min_price)->where('ListPrice','<=',$max_price)->where('SqFtTotal','>=',$square_feet)->where('NumAcres','=',$acres)->orderBy($sortbyfield,$sorttype)
+    //->with(['propertyfeature','propertyadditional','propertyexternalfeature','propertyimage','propertyfinancialdetail','propertyinteriorfeature','propertyinteriorfeature','propertylatlong','propertylocation'])->get();
+    $wordCount = $PropertyLocation->count();
+    //dd($wordCount);
+    //dd($PropertyLocation);
+    return response()->json(['listing' => $PropertyLocation, 'fullcount' => $PropertyLocation_full_count]);
     }
 
     /**
@@ -220,7 +340,6 @@ class APIController extends Controller
         //dd($matrix_unique_id);
         $PropertyLocation = PropertyDetail::where('Matrix_Unique_ID','=',$matrix_unique_id);
         $PropertyLocation = $PropertyLocation->with(['propertyfeature','propertyadditional','propertyexternalfeature','propertyimage','propertyfinancialdetail','propertyinteriorfeature','propertyinteriorfeature','propertylatlong','propertylocation'])->get();
-            //dd($PropertyLocation);
         return response()->json($PropertyLocation);
     }
     public function photo_gallery(Request $request,$matrix_unique_id)
@@ -230,6 +349,7 @@ class APIController extends Controller
         $PropertyLocation = PropertyDetail::where('Matrix_Unique_ID','=',$matrix_unique_id);
         $PropertyLocation = $PropertyLocation->with('propertyimage')->get();
             //dd($PropertyLocation);
+        return response()->json($property_full_count);
         return response()->json($PropertyLocation);
     }
     public function addresssearch(Request $request){
@@ -300,7 +420,9 @@ class APIController extends Controller
            
            $PropertyLocation = $PropertyLocation->whereHas('propertyadditional', function ($new4query) use ($house_number) {$new4query->where('PublicAddress','Like','%' .$house_name. '%');}); 
         }
+        
         $PropertyLocation = $PropertyLocation->with(['propertyfeature','propertyadditional','propertyexternalfeature','propertyimage','propertyfinancialdetail','propertyinteriorfeature','propertyinteriorfeature','propertylatlong','propertylocation'])->limit($limit)->offset($offset)->get();
+
         return response()->json($PropertyLocation);
     }
     public function create()

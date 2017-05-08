@@ -29,6 +29,7 @@ Route::group(array('prefix' => 'api'), function() {
 
     //Route::controller('rets/v1','APIController');
      Route::resource('rets/v1/','APIController');
+     Route::get('rets/v1/homepage_listing','APIController@homepage_listing');
      Route::get('rets/v1/advance_search','APIController@advance_search');
      Route::get('rets/v1/property_desc/{matrix_unique_id}','APIController@property_desc');
      Route::get('rets/v1/photo_gallery/{matrix_unique_id}','APIController@photo_gallery');
