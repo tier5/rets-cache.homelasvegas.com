@@ -322,65 +322,67 @@ class APIController extends Controller
         }
         $PropertyLocation = PropertyDetail::whereHas('propertyfeature', function ($newquery) use ($property_type) {$newquery->where('PropertyType', '=',$property_type);});
         if($city!=''){
+            $city= explode(',', $city);
             $PropertyLocation = $PropertyLocation->wherein('City',$city);
         }
-        elseif($min_price!='')
+        if($min_price!='')
         {
             $PropertyLocation = $PropertyLocation->where('ListPrice','>=',$min_price);
         }
-        elseif($max_price!='')
+        if($max_price!='')
         {
             $PropertyLocation = $PropertyLocation->where('ListPrice','>=',$max_price);
         }
-        elseif($square_feet!='')
+        if($square_feet!='')
         {
             $PropertyLocation = $PropertyLocation->where('SqFtTotal','>=',$square_feet);
         }
-        elseif($acres!='')
+        if($acres!='')
         {
             $PropertyLocation = $PropertyLocation->where('NumAcres','>=',$acres);
         }
-        elseif($bedrooms!='')
+        if($bedrooms!='')
         {
             $PropertyLocation = $PropertyLocation->where('BedroomsTotalPossibleNum','>=',$bedrooms);
         }
-        elseif($bathrooms!='')
+        if($bathrooms!='')
         {
             $PropertyLocation = $PropertyLocation->where('BathsTotal','>=',$bathrooms);
         }
-        elseif($status!='')
+        if($status!='')
         {
+          //dd($status);
+          $status= explode(',', $status);
            $PropertyLocation = $PropertyLocation->whereIn('Status',$status); 
         }
-        elseif($property_sub_type!='')
+        if($property_sub_type!='')
         {
             $PropertyLocation = $PropertyLocation->whereHas('propertyfeature', function ($new2query) use ($property_sub_type) {$new2query->whereIn('PropertySubType',$property_sub_type);});
         }
-        $PropertyLocation = $PropertyLocation->orderBy($sortbyfield,$sorttype);
-        $PropertyLocation = $PropertyLocation->with(['propertyfeature','propertyadditional','propertyexternalfeature','propertyimage','propertyfinancialdetail','propertyinteriorfeature','propertyinteriorfeature','propertylatlong','propertylocation'])->limit($limit)->offset($offset)->get();
-//$PropertyLocation = PropertyDetail::whereHas('propertyfeature', function ($newquery) use ($property_type) {$newquery->where('PropertyType', '=',$property_type);})->where('City','=',$city)->where('ListPrice','>=',$min_price)->where('ListPrice','<=',$max_price)->where('SqFtTotal','>=',$square_feet)->where('NumAcres','=',$acres)->orderBy($sortbyfield,$sorttype)
-    //->with(['propertyfeature','propertyadditional','propertyexternalfeature','propertyimage','propertyfinancialdetail','propertyinteriorfeature','propertyinteriorfeature','propertylatlong','propertylocation'])->get();
-    $wordCount = $PropertyLocation->count();
-    //dd($wordCount);
-    //dd($PropertyLocation);
-        return response()->json($PropertyLocation);
+          $PropertyLocation = $PropertyLocation->orderBy($sortbyfield,$sorttype);
+          $PropertyLocation_list = $PropertyLocation->with(['propertyfeature','propertyadditional','propertyexternalfeature','propertyimage','propertyfinancialdetail','propertyinteriorfeature','propertyinteriorfeature','propertylatlong','propertylocation'])->limit($limit)->offset($offset)->get();
+          $PropertyLocation_full = $PropertyLocation->with(['propertyfeature','propertyadditional','propertyexternalfeature','propertyimage','propertyfinancialdetail','propertyinteriorfeature','propertyinteriorfeature','propertylatlong','propertylocation'])->get();
+          $PropertyLocation_count=collect($PropertyLocation_full);
+          $PropertyLocation_full_count=$PropertyLocation_count->count(); 
+          //$wordCount = $PropertyLocation->count();
+          //dd($wordCount);
+          //dd($PropertyLocation_full_count);
+    return response()->json(['listing' => $PropertyLocation_list, 'fullcount' => $PropertyLocation_full_count]);
 
     }
     public function property_desc(Request $request,$matrix_unique_id)
     {
-        //dd('trst');
-        //dd($matrix_unique_id);
+        
         $PropertyLocation = PropertyDetail::where('Matrix_Unique_ID','=',$matrix_unique_id);
         $PropertyLocation = $PropertyLocation->with(['propertyfeature','propertyadditional','propertyexternalfeature','propertyimage','propertyfinancialdetail','propertyinteriorfeature','propertyinteriorfeature','propertylatlong','propertylocation'])->get();
         return response()->json($PropertyLocation);
     }
     public function photo_gallery(Request $request,$matrix_unique_id)
     {
-        //dd('first');
-        //dd($matrix_unique_id);
+        
         $PropertyLocation = PropertyDetail::where('Matrix_Unique_ID','=',$matrix_unique_id);
         $PropertyLocation = $PropertyLocation->with('propertyimage')->get();
-            dd($PropertyLocation);
+        //dd($PropertyLocation);
         return response()->json($PropertyLocation);
     }
     public function addresssearch(Request $request){
@@ -416,6 +418,7 @@ class APIController extends Controller
             $property_type='High Rise';
           }
           $city=$request['city'];
+          //return response()->json($city);
           $county=$request['county'];
           $postal_code=$request['postal_code'];
           $house_number=$request['house_number'];
@@ -423,22 +426,23 @@ class APIController extends Controller
           $house_name=$request['house_name'];
           $PropertyLocation = PropertyDetail::whereHas('propertyfeature', function ($newquery) use ($property_type) {$newquery->where('PropertyType', '=',$property_type);});
         if($city!=''){
-            
+            $city= explode(',', $city);
+
             $PropertyLocation = $PropertyLocation->wherein('City',$city);
         }
         elseif($county!=''){
-
+            $county= explode(',', $county);
             $PropertyLocation->whereHas('propertyfeature', function ($new3query) use ($county) {$new3query->whereIn('CountyOrParish',$county);});
         }
         
         elseif($postal_code!='')
         {
-           
+           $postal_code= explode(',', $postal_code);
            $PropertyLocation = $PropertyLocation->whereIn('PostalCode',$postal_code); 
         }
         elseif($house_number!='')
         {
-           
+           $house_number= explode(',', $house_number);
            $PropertyLocation = $PropertyLocation->whereHas('propertyadditional', function ($new4query) use ($house_number) {$new4query->where('PublicAddress','Like','%' .$house_number. '%');}); 
         }
         elseif($house_deriction!='')
@@ -452,9 +456,15 @@ class APIController extends Controller
            $PropertyLocation = $PropertyLocation->whereHas('propertyadditional', function ($new4query) use ($house_number) {$new4query->where('PublicAddress','Like','%' .$house_name. '%');}); 
         }
         
-        $PropertyLocation = $PropertyLocation->with(['propertyfeature','propertyadditional','propertyexternalfeature','propertyimage','propertyfinancialdetail','propertyinteriorfeature','propertyinteriorfeature','propertylatlong','propertylocation'])->limit($limit)->offset($offset)->get();
+        $PropertyLocation_list = $PropertyLocation->with(['propertyfeature','propertyadditional','propertyexternalfeature','propertyimage','propertyfinancialdetail','propertyinteriorfeature','propertyinteriorfeature','propertylatlong','propertylocation'])->limit($limit)->offset($offset)->get();
 
-        return response()->json($PropertyLocation);
+        $PropertyLocation_full = $PropertyLocation->with(['propertyfeature','propertyadditional','propertyexternalfeature','propertyimage','propertyfinancialdetail','propertyinteriorfeature','propertyinteriorfeature','propertylatlong','propertylocation'])->get();
+          $PropertyLocation_count=collect($PropertyLocation_full);
+          $PropertyLocation_full_count=$PropertyLocation_count->count(); 
+          //$wordCount = $PropertyLocation->count();
+          //dd($wordCount);
+          //dd($PropertyLocation_full_count);
+    return response()->json(['listing' => $PropertyLocation_list, 'fullcount' => $PropertyLocation_full_count]);
     }
     public function create()
     {
