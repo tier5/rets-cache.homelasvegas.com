@@ -466,6 +466,22 @@ class APIController extends Controller
           //dd($PropertyLocation_full_count);
     return response()->json(['listing' => $PropertyLocation_list, 'fullcount' => $PropertyLocation_full_count]);
     }
+
+	public function mortgage_calculator(Request $request,$matrix_unique_id)
+	{ 
+	$PropertyMortgage = PropertyDetail::where('Matrix_Unique_ID','=',$matrix_unique_id);
+	$PropertyMortgage = $PropertyMortgage->with('propertyimage')->get();
+	//dd($PropertyLocation);
+	return response()->json($PropertyMortgage);
+	}
+
+
+	public function printable_flyer(Request $request,$matrix_unique_id){
+		$PropertyPrintable = PropertyDetail::where('Matrix_Unique_ID','=',$matrix_unique_id);
+		$PropertyPrintable = $PropertyPrintable->with					(['propertyfeature','propertyadditional','propertyexternalfeature','propertyimage','propertyfinancialdetail','propertyinteriorfeature','propertyinteriorfeature','propertylatlong','propertylocation'])->get();
+		//dd($PropertyLocation);
+		return response()->json($PropertyPrintable);
+	}	
     public function create()
     {
         //
