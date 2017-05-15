@@ -138,9 +138,9 @@ class InserSearchList implements ShouldQueue
                     $key=0;
                 while ($listing = $rets->FetchRow($search)) 
                 {   
-                     // echo '<pre>';
-                    // print_r($listing);
-                    // echo '</pre>';
+                    /* echo '<pre>';
+                    print_r($listing);
+                    echo '</pre>';*/
                     $search_result[$key]['Matrix_Unique_ID']=$listing['Matrix_Unique_ID'];
                     $search_result[$key]['StreetNumber']=$listing['StreetNumber'];
                     $search_result[$key]['StreetName']=$listing['StreetName'];
@@ -150,6 +150,12 @@ class InserSearchList implements ShouldQueue
                     $search_result[$key]['SqFtTotal']=$listing['SqFtTotal'];
                     $search_result[$key]['Status']=$listing['Status'];
                     $search_result[$key]['PublicAddress']=$listing['PublicAddress'];
+                    $search_reuslt[$key]['PublicAddressYN'] = $listing['PublicAddressYN'];
+                    $search_reuslt[$key]['PublicRemarks'] = $listing['PublicRemarks'];
+                    $search_reuslt[$key]['ListAgentMLSID'] = $listing['ListAgentMLSID'];
+                    $search_reuslt[$key]['ListAgentFullName'] = $listing['ListAgentFullName'];
+                    $search_reuslt[$key]['ListOfficeName'] = $listing['ListOfficeName'];
+                    $search_reuslt[$key]['ListAgentDirectWorkPhone'] = $listing['ListAgentDirectWorkPhone'];
                     $search_result[$key]['ListPrice']=$listing['ListPrice'];
                     $search_result[$key]['BathsTotal']=$listing['BathsTotal'];
                     $search_result[$key]['BathsHalf']=$listing['BathsHalf'];
@@ -857,6 +863,12 @@ class InserSearchList implements ShouldQueue
                                                $is_property_additional->PropertySubType = $listing['PropertySubType'];
 
                                                $is_property_additional->PublicAddress = $listing['PublicAddress'];
+                                               $is_property_additional->PublicAddressYN = $listing['PublicAddressYN'];
+                                               $is_property_additional->PublicRemarks = $listing['PublicRemarks'];
+                                               $is_property_additional->ListAgentMLSID = $listing['ListAgentMLSID'];
+                                               $is_property_additional->ListAgentFullName = $listing['ListAgentFullName'];
+                                               $is_property_additional->ListOfficeName = $listing['ListOfficeName'];
+                                               $is_property_additional->ListAgentDirectWorkPhone = $listing['ListAgentDirectWorkPhone'];
                                                $is_property_additional->RealtorYN = $RealtorYN;
                                                $is_property_additional->RefrigeratorYN = $RefrigeratorYN;
                                                $is_property_additional->Spa = $listing['Spa'];
@@ -902,6 +914,12 @@ class InserSearchList implements ShouldQueue
                                                $propertyadditional->PropertySubType = $listing['PropertySubType'];
 
                                                $propertyadditional->PublicAddress = $listing['PublicAddress'];
+                                               $propertyadditional->PublicAddressYN = $listing['PublicAddressYN'];
+                                               $propertyadditional->PublicRemarks = $listing['PublicRemarks'];
+                                               $propertyadditional->ListAgentMLSID = $listing['ListAgentMLSID'];
+                                               $propertyadditional->ListAgentFullName = $listing['ListAgentFullName'];
+                                               $propertyadditional->ListOfficeName = $listing['ListOfficeName'];
+                                               $propertyadditional->ListAgentDirectWorkPhone = $listing['ListAgentDirectWorkPhone'];
                                                $propertyadditional->RealtorYN = $RealtorYN;
                                                $propertyadditional->RefrigeratorYN = $RefrigeratorYN;
                                                $propertyadditional->Spa = $listing['Spa'];

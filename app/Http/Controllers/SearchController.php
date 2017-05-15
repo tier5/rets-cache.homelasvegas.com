@@ -97,7 +97,7 @@ class SearchController extends Controller
 					$key=0;
 				while ($listing = $rets->FetchRow($search)) 
 				{   
-                     /* echo '<pre>';
+                      /*echo '<pre>';
 					print_r($listing);
 					 echo '</pre>';exit;*/
 					$search_result[$key]['Matrix_Unique_ID']=$listing['Matrix_Unique_ID'];
@@ -109,6 +109,12 @@ class SearchController extends Controller
 					$search_result[$key]['SqFtTotal']=$listing['SqFtTotal'];
 					$search_result[$key]['Status']=$listing['Status'];
 					$search_result[$key]['PublicAddress']=$listing['PublicAddress'];
+					$search_reuslt[$key]['PublicAddressYN'] = $listing['PublicAddressYN'];
+                    $search_reuslt[$key]['PublicRemarks'] = $listing['PublicRemarks'];
+                    $search_reuslt[$key]['ListAgentMLSID'] = $listing['ListAgentMLSID'];
+                    $search_reuslt[$key]['ListAgentFullName'] = $listing['ListAgentFullName'];
+                    $search_reuslt[$key]['ListOfficeName'] = $listing['ListOfficeName'];
+                    $search_reuslt[$key]['ListAgentDirectWorkPhone'] = $listing['ListAgentDirectWorkPhone'];
 					$search_result[$key]['ListPrice']=$listing['ListPrice'];
 					$search_result[$key]['BathsTotal']=$listing['BathsTotal'];
 					$search_result[$key]['BathsHalf']=$listing['BathsHalf'];
@@ -808,6 +814,9 @@ class SearchController extends Controller
 									           $is_property_additional->PropertySubType = $listing['PropertySubType'];
 
 									           $is_property_additional->PublicAddress = $listing['PublicAddress'];
+									           $is_property_additional->PublicRemarks = $listing['PublicRemarks'];
+                                               $is_property_additional->ListAgentMLSID = $listing['ListAgentMLSID'];
+                                               $is_property_additional->ListAgentFullName = $listing['ListAgentFullName'];
 									           $is_property_additional->RealtorYN = $RealtorYN;
 									           $is_property_additional->RefrigeratorYN = $RefrigeratorYN;
 									           $is_property_additional->Spa = $listing['Spa'];
@@ -853,6 +862,14 @@ class SearchController extends Controller
 									           $propertyadditional->PropertySubType = $listing['PropertySubType'];
 
 									           $propertyadditional->PublicAddress = $listing['PublicAddress'];
+									           $propertyadditional->PublicAddressYN = $listing['PublicAddressYN'];
+                                               $propertyadditional->PublicRemarks = $listing['PublicRemarks'];
+                                               $propertyadditional->ListAgentMLSID = $listing['ListAgentMLSID'];
+                                               $propertyadditional->ListAgentFullName = $listing['ListAgentFullName'];
+                                               $is_property_additional->ListOfficeName = $listing['ListOfficeName'];
+                                               $is_property_additional->ListAgentDirectWorkPhone = $listing['ListAgentDirectWorkPhone'];
+                                               $propertyadditional->ListOfficeName = $listing['ListOfficeName'];
+                                               $propertyadditional->ListAgentDirectWorkPhone = $listing['ListAgentDirectWorkPhone'];
 									           $propertyadditional->RealtorYN = $RealtorYN;
 									           $propertyadditional->RefrigeratorYN = $RefrigeratorYN;
 									           $propertyadditional->Spa = $listing['Spa'];
