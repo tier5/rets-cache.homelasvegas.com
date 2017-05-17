@@ -128,8 +128,9 @@ class SearchController extends Controller
 				    $search_result[$key]['MLSNumber']=$listing['MLSNumber'];
 				    $search_result[$key]['OriginalEntryTimestamp']=$listing['OriginalEntryTimestamp'];
 				    $search_result[$key]['CommunityName']=$listing['CommunityName'];
-	
-	
+				    
+		
+			
    				$photos = $rets->GetObject("Property", "Photo", $listing['Matrix_Unique_ID'], "*", 0);
                //dd($photos);exit;
 
@@ -635,6 +636,10 @@ class SearchController extends Controller
 									           $is_property->StreetName   = $listing['StreetName']; 
 									           $is_property->City         = $data['city'];
 									           $is_property->MLSNumber    = $listing['MLSNumber'];
+									           $is_property->PostalCode    = $listing['PostalCode'];
+									           $is_property->PhotoCount    = $listing['PhotoCount'];
+					       $is_property->PublicAddress = $listing['PublicAddress'];
+                                               $is_property->VirtualTourLink    = $listing['VirtualTourLink'];
 								    	       $is_property->save();
 
 
@@ -660,6 +665,10 @@ class SearchController extends Controller
 									           $property->StreetName   = $listing['StreetName']; 
 									           $property->City         = $data['city'];
 									           $property->MLSNumber    = $listing['MLSNumber'];
+									           $property->PostalCode    = $listing['PostalCode'];
+                                                $property->PhotoCount    = $listing['PhotoCount'];
+						$property->PublicAddress = $listing['PublicAddress'];
+                                               $property->VirtualTourLink    = $listing['VirtualTourLink'];
 								    	       $property->save();
 					                        }
 
@@ -866,8 +875,8 @@ class SearchController extends Controller
                                                $propertyadditional->PublicRemarks = $listing['PublicRemarks'];
                                                $propertyadditional->ListAgentMLSID = $listing['ListAgentMLSID'];
                                                $propertyadditional->ListAgentFullName = $listing['ListAgentFullName'];
-                                               $is_property_additional->ListOfficeName = $listing['ListOfficeName'];
-                                               $is_property_additional->ListAgentDirectWorkPhone = $listing['ListAgentDirectWorkPhone'];
+                                               $propertyadditional->ListOfficeName = $listing['ListOfficeName'];
+                                               $propertyadditional->ListAgentDirectWorkPhone = $listing['ListAgentDirectWorkPhone'];
                                                $propertyadditional->ListOfficeName = $listing['ListOfficeName'];
                                                $propertyadditional->ListAgentDirectWorkPhone = $listing['ListAgentDirectWorkPhone'];
 									           $propertyadditional->RealtorYN = $RealtorYN;
@@ -1099,11 +1108,12 @@ class SearchController extends Controller
 
 
 			        foreach ($search_result as $add=>$address) {
+			        	
+			        	//echo $address['PublicAddress'];exit;
 				        $formattedAddr = str_replace(' ','+',$address['PublicAddress']);
 				        $final_address=$formattedAddr.'+'.$address['PostalCode'];
-				        $geocodeFromAddr = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.$final_address.'&key=AIzaSyBikaraM6wOzK1NN0fqhPOeiJeqvuddfGQ'); 
+				        $geocodeFromAddr = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.$final_address.'&key=AIzaSyCnzJ15XOMd1ntur0iXSq6VqeM4wAwkCrE'); 
 				        $output = json_decode($geocodeFromAddr);
-				       ;
 
 				       $data[$add]['formatted_address'] = $data[$add]['latitude'] = $data[$add]['longitude'] = '';
                        if(isset($output->results[0]->geometry->location->lat) && $output->results[0]->geometry->location->lat != '')
@@ -1126,14 +1136,18 @@ class SearchController extends Controller
 				       
 				        
        					 //Return latitude and longitude of the given address
-				       
+
 				        $is_property_latlong = PropertyLatLong::where('Matrix_Unique_ID', '=', $address['Matrix_Unique_ID'])->first();
+
+				        if (stripos($data[$add]['formatted_address'], $request->input('city')) !== false) {
+   
 				        if($is_property_latlong)
 				        {
 				        	 
 					        $is_property_latlong->MLSNumber = $address['MLSNumber'];
 					        $is_property_latlong->latitude = $data[$add]['latitude'];
 					        $is_property_latlong->longitude = $data[$add]['longitude'];
+					        $is_property_latlong->FormatedAddress = $data[$add]['formatted_address'];
 					        $is_property_latlong->save();
 				        }
 				        else
@@ -1144,8 +1158,10 @@ class SearchController extends Controller
 					        $latlong->MLSNumber = $address['MLSNumber'];
 					        $latlong->latitude = $data[$add]['latitude'];
 					        $latlong->longitude = $data[$add]['longitude'];
+					        $latlong->FormatedAddress = $data[$add]['formatted_address'];
 					        $latlong->save();
 				       }
+				   }
 
 				        
 
@@ -1161,7 +1177,8 @@ class SearchController extends Controller
 			        print_r($rets->Error());
 			        exit;
 		 }
-
+		 //echo '<pre>';
+		 //print_r($search_result);
 		 return view('rets.search', ['data'=>$data,'search_result'=>$search_result, 'total_records'=>$result_count]);
 }
 }

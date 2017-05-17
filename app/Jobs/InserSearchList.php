@@ -1151,10 +1151,9 @@ class InserSearchList implements ShouldQueue
                     foreach ($search_result as $add=>$address) {
                         $formattedAddr = str_replace(' ','+',$address['PublicAddress']);
                         $final_address=$formattedAddr.'+'.$address['PostalCode'];
-                        $geocodeFromAddr = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.$final_address.'&key=AIzaSyBikaraM6wOzK1NN0fqhPOeiJeqvuddfGQ'); 
+                        $geocodeFromAddr = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.$final_address.'&key=AIzaSyCnzJ15XOMd1ntur0iXSq6VqeM4wAwkCrE'); 
                         $output = json_decode($geocodeFromAddr);
-                       ;
-
+                         
                        $data[$add]['formatted_address'] = $data[$add]['latitude'] = $data[$add]['longitude'] = '';
                        if(isset($output->results[0]->geometry->location->lat) && $output->results[0]->geometry->location->lat != '')
                        {
@@ -1178,12 +1177,14 @@ class InserSearchList implements ShouldQueue
                          //Return latitude and longitude of the given address
                        
                         $is_property_latlong = PropertyLatLong::where('Matrix_Unique_ID', '=', $address['Matrix_Unique_ID'])->first();
+                        if (stripos($data[$add]['formatted_address'], $city) !== false) {
                         if($is_property_latlong)
                         {
                              
                             $is_property_latlong->MLSNumber = $address['MLSNumber'];
                             $is_property_latlong->latitude = $data[$add]['latitude'];
                             $is_property_latlong->longitude = $data[$add]['longitude'];
+                            $is_property_latlong->FormatedAddress = $data[$add]['formatted_address'];
                             $is_property_latlong->save();
                         }
                         else
@@ -1194,8 +1195,10 @@ class InserSearchList implements ShouldQueue
                             $latlong->MLSNumber = $address['MLSNumber'];
                             $latlong->latitude = $data[$add]['latitude'];
                             $latlong->longitude = $data[$add]['longitude'];
+                            $latlong->FormatedAddress = $data[$add]['formatted_address'];
                             $latlong->save();
                        }
+                     }
 
                         
 
