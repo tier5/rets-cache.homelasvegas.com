@@ -91,7 +91,8 @@ class InserSearchList implements ShouldQueue
         $data = array();
 
         $cityArray = array(
-          'ALAMO' => 'Amargosa',
+          'ALAMO' => 'Alamo',
+          'ARMAGOSA' => 'Amargosa',
           'BEATTY' => 'Beatty',
           'BLUEDIAM' => 'Blue Diamond',
           'BOULDERC' => 'Boulder City',
