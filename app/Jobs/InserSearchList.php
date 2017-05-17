@@ -40,9 +40,17 @@ class InserSearchList implements ShouldQueue
     public function handle()
     {
         //echo "Here";
+
+      
+
+
+
         $rets_login_url = "http://rets.las.mlsmatrix.com/rets/login.ashx";
         $rets_username = "neal";
         $rets_password = "glvar";
+
+
+
 
         $rets = new phRETS;
 
@@ -81,6 +89,40 @@ class InserSearchList implements ShouldQueue
         /***** test *****/
         $search_result = array();
         $data = array();
+
+        $cityArray = array(
+          'ALAMO' => 'Amargosa',
+          'BEATTY' => 'Beatty',
+          'BLUEDIAM' => 'Blue Diamond',
+          'BOULDERC' => 'Boulder City',
+          'CALIENTE' => 'Caliente',
+          'CALNEVAR' => 'Cal-Nev-Ari',
+          'COLDCRK' => 'Cold Creek',
+          'ELY' => 'Ely',
+          'GLENDALE' => 'Glendale',
+          'GOODSPRG' => 'Goodsprings',
+          'HENDERSON' => 'Henderson',
+          'INDIANSP' => 'Indian Springs',
+          'JEAN' => 'Jean',
+          'LASVEGAS' => 'Las Vegas',
+          'LAUGHLIN' => 'Laughlin',
+          'LOGANDAL' => 'Logandale',
+          'MCGILL' => 'Mc Gill',
+          'MESQUITE' => 'Mesquite',
+          'MOAPA' => 'Moapa',
+          'MTNSPRG' => 'Mountain Spring',
+          'NORTHLAS' => 'North Las Vegas',
+          'OTHER' => 'Other',
+          'OVERTON' => 'Overton',
+          'PAHRUMP' => 'Pahrump',
+          'PALMGRDNS' => 'Palm Gardens',
+          'PANACA' => 'Panaca',
+          'PIOCHE' => 'Pioche',
+          'SANDYVLY' => 'Sandy Valley',
+          'SEARCHLT' => 'Searchlight',
+          'TONOPAH' => 'Tonopah',
+          'URSINE' => 'Ursine'
+        );
       
         $rets_login_url = "http://rets.las.mlsmatrix.com/rets/login.ashx";
         $rets_username = "neal";
@@ -1177,7 +1219,7 @@ class InserSearchList implements ShouldQueue
                          //Return latitude and longitude of the given address
                        
                         $is_property_latlong = PropertyLatLong::where('Matrix_Unique_ID', '=', $address['Matrix_Unique_ID'])->first();
-                        if (stripos($data[$add]['formatted_address'], $city) !== false) {
+                        if (stripos($data[$add]['formatted_address'], $cityArray[$city]) !== false) {
                         if($is_property_latlong)
                         {
                              

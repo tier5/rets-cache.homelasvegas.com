@@ -21,3 +21,5 @@ RetsAPI V2.0 released to dev
 	2.alter database and also update with additional fields.
 RetsAPI V3.0 released to dev
 	1.fixed map lat long issue
+RetsAPI V4.0 released to dev
+	1.add an array of city name and city list.
