@@ -170,10 +170,10 @@ class InserSearchList implements ShouldQueue
                 // }
 
 
-                 $search = $rets->SearchQuery("Property","Listing",$query,array("StandardNames" => 0,'Limit' =>$limit,'Offset'=>$offset));
+//                 $search = $rets->SearchQuery("Property","Listing",$query,array("StandardNames" => 0,'Limit' =>$limit,'Offset'=>$offset));
                  /*echo '<pre>';
                  print_r($search);*/
-                  /*$search = $rets->SearchQuery("Property","Listing",$query,array("StandardNames" => 0));*/
+                  $search = $rets->SearchQuery("Property","Listing",$query,array("StandardNames" => 0));
                     $result_count=$rets->TotalRecordsFound();
                     /*echo 'city'.$city.'----'.$result_count;exit;*/
                     $total_records= $pages=ceil($result_count/$limit);
@@ -214,7 +214,7 @@ class InserSearchList implements ShouldQueue
                     $search_result[$key]['CommunityName']=$listing['CommunityName'];
     
     
-                $photos = $rets->GetObject("Property", "Photo", $listing['Matrix_Unique_ID'], "*", 0);
+                $photos = $rets->GetObject("Property", "LargePhoto", $listing['Matrix_Unique_ID'], "*", 0);
                //dd($photos);exit;
                 $deleteImage = PropertyImage::where('Matrix_Unique_ID', '=', $listing['Matrix_Unique_ID'])->delete();
                 $contentType = $property_image  ='';
