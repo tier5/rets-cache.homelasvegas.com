@@ -23,4 +23,5 @@ Route::group(array('prefix' => 'rets/v1'), function () {
     Route::get('advance_listing/', 'APIController@advance_listing');
     Route::get('mortgage_cal/{matrix_unique_id}', 'APIController@mortgage_calculator');
     Route::get('printable_flyer/{matrix_unique_id}', 'APIController@printable_flyer');
+    Route::get('test/{Matrix_Unique_ID}','APIController@thresholdCheck');
 });

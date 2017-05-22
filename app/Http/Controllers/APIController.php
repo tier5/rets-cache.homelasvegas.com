@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\UpdateProperty;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use \DB;
 use App\PropertyDetail;
@@ -511,5 +513,30 @@ class APIController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function thresholdCheck($Matrix_Unique_ID)
+    {
+        $propertyDetails = PropertyDetail::where('Matrix_Unique_ID', $Matrix_Unique_ID)->first();
+        if ($propertyDetails != null) {
+            $now = Carbon::now();
+            $date = Carbon::parse($propertyDetails->updated_at);
+            $diff = $date->diffInDays($now);
+            if ($diff >= env('THRESHOLD')) {
+                /*$job = (new UpdateProperty($Matrix_Unique_ID));
+                $this->dispatch($job);*/
+                return 'yes';
+            } else {
+                return 'yes';
+            }
+        } else {
+            try {
+                $job = (new UpdateProperty($Matrix_Unique_ID));
+                $this->dispatch($job);
+                return 'yes';
+            } catch (\Exception $e) {
+                return 'not';
+            }
+        }
     }
 }
