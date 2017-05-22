@@ -13,6 +13,15 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:api');
+Route::group(array('prefix' => 'rets/v1'), function () {
+    Route::resource('/', 'APIController');
+    Route::get('homepage_listing', 'APIController@homepage_listing');
+    Route::get('advance_search', 'APIController@advance_search');
+    Route::get('property_desc/{matrix_unique_id}', 'APIController@property_desc');
+    Route::get('photo_gallery/{matrix_unique_id}/{mls_number}', 'APIController@photo_gallery');
+    Route::get('address_search/', 'APIController@addresssearch');
+    Route::get('advance_listing/', 'APIController@advance_listing');
+    Route::get('mortgage_cal/{matrix_unique_id}', 'APIController@mortgage_calculator');
+    Route::get('printable_flyer/{matrix_unique_id}', 'APIController@printable_flyer');
+    Route::get('test/{Matrix_Unique_ID}','APIController@thresholdCheck');
+});
