@@ -18,25 +18,10 @@ Route::get('/ret_search', array('as' => 'ret-search', 'uses' => 'SearchControlle
 Route::post('/do_search/{offset}', array('as' => 'do-search', 'uses' => 'SearchController@do_search'));
 
 Route::get('/test', array('as' => 'test', 'uses' => 'SearchController@test'));
-Route::get('sample-restful-apis', function()
-{
+Route::get('sample-restful-apis', function () {
     return array(
-      1 => "expertphp",
-      2 => "demo"
+        1 => "expertphp",
+        2 => "demo"
     );
 });
-Route::group(array('prefix' => 'api'), function() {
 
-    //Route::controller('rets/v1','APIController');
-     Route::resource('rets/v1/','APIController');
-     Route::get('rets/v1/homepage_listing','APIController@homepage_listing');
-     Route::get('rets/v1/advance_search','APIController@advance_search');
-     Route::get('rets/v1/property_desc/{matrix_unique_id}','APIController@property_desc');
-     Route::get('rets/v1/photo_gallery/{matrix_unique_id}','APIController@photo_gallery');
-     Route::get('rets/v1/address_search/','APIController@addresssearch');
-     Route::get('rets/v1/advance_listing/','APIController@advance_listing');
-     Route::get('rets/v1/mortgage_cal/{matrix_unique_id}','APIController@mortgage_calculator');
-     Route::get('rets/v1/printable_flyer/{matrix_unique_id}','APIController@printable_flyer');
-     
-
-});
