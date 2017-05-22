@@ -14,14 +14,22 @@
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('/ret_search', array('as' => 'ret-search', 'uses' => 'SearchController@index'));
-Route::post('/do_search/{offset}', array('as' => 'do-search', 'uses' => 'SearchController@do_search'));
-
-Route::get('/test', array('as' => 'test', 'uses' => 'SearchController@test'));
+Route::get('/ret_search', [
+    'as' => 'ret-search',
+    'uses' => 'SearchController@index'
+]);
+Route::post('/do_search/{offset}', [
+    'as' => 'do-search',
+    'uses' => 'SearchController@do_search'
+]);
+Route::get('test', [
+    'as' => 'test',
+    'uses' => 'SearchController@test'
+]);
 Route::get('sample-restful-apis', function () {
     return array(
         1 => "expertphp",
         2 => "demo"
     );
 });
-
+Route::get('import-data','SearchController@importData');

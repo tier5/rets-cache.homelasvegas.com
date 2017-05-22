@@ -14,7 +14,6 @@ use Illuminate\Http\Request;
 */
 
 Route::group(array('prefix' => 'rets/v1'), function () {
-    //Route::controller('rets/v1','APIController');
     Route::resource('/', 'APIController');
     Route::get('homepage_listing', 'APIController@homepage_listing');
     Route::get('advance_search', 'APIController@advance_search');
