@@ -36,7 +36,7 @@ class AlterPropertyAdditional extends Migration
     {
         Schema::table('property_additionals', function (Blueprint $table) {
             //
-            $table->dropColumn('PostalAddressYN');
+            $table->dropColumn('PublicAddressYN');
             $table->dropColumn('PublicRemark');
             $table->dropColumn('ListAgentMLSID');
             $table->dropColumn('ListAgentFullName');
