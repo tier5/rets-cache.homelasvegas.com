@@ -993,7 +993,7 @@ class SearchController extends Controller
                 //echo $address['PublicAddress'];exit;
                 $formattedAddr = str_replace(' ', '+', $address['PublicAddress']);
                 $final_address = $formattedAddr . '+' . $address['PostalCode'];
-                $geocodeFromAddr = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address=' . $final_address . '&key=AIzaSyCnzJ15XOMd1ntur0iXSq6VqeM4wAwkCrE');
+                $geocodeFromAddr = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address=' . $final_address . '&key='.env('GOOGLEAPIKEY'));
                 $output = json_decode($geocodeFromAddr);
 
                 $data[$add]['formatted_address'] = $data[$add]['latitude'] = $data[$add]['longitude'] = '';
