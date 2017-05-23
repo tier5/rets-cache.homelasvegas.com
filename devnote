@@ -36,5 +36,7 @@ RetsApi V5.0.2 release to dev
 	1.Fix Current Queue
 	2.Insert 1 image at the time of inserting value for first time
 	3.Make proper Indentation for every controller and models
-RetsApi V5.1
+RetsApi V5.1 release to dev
 	1.set threshold value for fetch updated records
+RetsApi V5.1.0 release to dev
+    1.Fix threshold value for fetch updated records

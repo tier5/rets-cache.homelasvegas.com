@@ -523,8 +523,8 @@ class APIController extends Controller
             $date = Carbon::parse($propertyDetails->updated_at);
             $diff = $date->diffInDays($now);
             if ($diff >= env('THRESHOLD')) {
-                /*$job = (new UpdateProperty($Matrix_Unique_ID));
-                $this->dispatch($job);*/
+                $job = (new UpdateProperty($Matrix_Unique_ID));
+                $this->dispatch($job);
                 return 'yes';
             } else {
                 return 'yes';

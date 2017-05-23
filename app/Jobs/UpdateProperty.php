@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use GuzzleHttp\Client;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -336,41 +337,48 @@ class UpdateProperty implements ShouldQueue
                 if ($newPropertyDetails != null) {
                     //Update Lat Long
                     if ($newPropertyDetails->PublicAddress != $listing['PublicAddress']) {
-                        $formattedAddr = str_replace(' ', '+', $listing['PublicAddress']);
-                        $final_address = $formattedAddr . '+' . $listing['PostalCode'];
-                        $geocodeFromAddr = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address=' . $final_address . '&key=AIzaSyCnzJ15XOMd1ntur0iXSq6VqeM4wAwkCrE');
-                        $output = json_decode($geocodeFromAddr);
-                        $data['formatted_address'] = $data['latitude'] = $data['longitude'] = '';
-                        if (isset($output->results[0]->geometry->location->lat) && $output->results[0]->geometry->location->lat != '') {
-                            $data['latitude'] = $output->results[0]->geometry->location->lat;
-                        }
+                        try{
+                            $formattedAddr = str_replace(' ', '+', $listing['PublicAddress']);
+                            $final_address = $formattedAddr . '+' . $listing['PostalCode'];
+                            $client = new Client();
+                            $geocodeFromAddr = $client->request('GET','https://maps.googleapis.com/maps/api/geocode/json?address=' . $final_address . '&key=AIzaSyCnzJ15XOMd1ntur0iXSq6VqeM4wAwkCrE');
+                            if($geocodeFromAddr->getStatusCode() == 200){
+                                $output = json_decode($geocodeFromAddr->getBody());
+                                $data['formatted_address'] = $data['latitude'] = $data['longitude'] = '';
+                                if (isset($output->results[0]->geometry->location->lat) && $output->results[0]->geometry->location->lat != '') {
+                                    $data['latitude'] = $output->results[0]->geometry->location->lat;
+                                }
 
-                        if (isset($output->results[0]->geometry->location->lng) && $output->results[0]->geometry->location->lng != '') {
+                                if (isset($output->results[0]->geometry->location->lng) && $output->results[0]->geometry->location->lng != '') {
 
-                            $data['longitude'] = $output->results[0]->geometry->location->lng;
+                                    $data['longitude'] = $output->results[0]->geometry->location->lng;
 
-                        }
+                                }
 
-                        if (isset($output->results[0]->formatted_address) && $output->results[0]->formatted_address
-                            != ''
-                        ) {
-                            $data['formatted_address'] = $output->results[0]->formatted_address;
-                        }
-                        $latLong = PropertyLatLong::where('Matrix_Unique_ID', $Matrix_Unique_ID)->first();
-                        if($latLong != null){
-                            $latLong->MLSNumber = $listing['MLSNumber'];
-                            $latLong->latitude = $data['latitude'];
-                            $latLong->longitude = $data['longitude'];
-                            $latLong->FormatedAddress = $data['formatted_address'];
-                            $latLong->save();
-                        } else {
-                            $latlong = new PropertyLatLong();
-                            $latlong->Matrix_Unique_ID = $listing['Matrix_Unique_ID'];
-                            $latlong->MLSNumber = $listing['MLSNumber'];
-                            $latlong->latitude = $data['latitude'];
-                            $latlong->longitude = $data['longitude'];
-                            $latlong->FormatedAddress = $data['formatted_address'];
-                            $latlong->save();
+                                if (isset($output->results[0]->formatted_address) && $output->results[0]->formatted_address
+                                    != ''
+                                ) {
+                                    $data['formatted_address'] = $output->results[0]->formatted_address;
+                                }
+                                $latLong = PropertyLatLong::where('Matrix_Unique_ID', $Matrix_Unique_ID)->first();
+                                if($latLong != null){
+                                    $latLong->MLSNumber = $listing['MLSNumber'];
+                                    $latLong->latitude = $data['latitude'];
+                                    $latLong->longitude = $data['longitude'];
+                                    $latLong->FormatedAddress = $data['formatted_address'];
+                                    $latLong->save();
+                                } else {
+                                    $latlong = new PropertyLatLong();
+                                    $latlong->Matrix_Unique_ID = $listing['Matrix_Unique_ID'];
+                                    $latlong->MLSNumber = $listing['MLSNumber'];
+                                    $latlong->latitude = $data['latitude'];
+                                    $latlong->longitude = $data['longitude'];
+                                    $latlong->FormatedAddress = $data['formatted_address'];
+                                    $latlong->save();
+                                }
+                            }
+                        } catch (\Exception $e){
+                            Log::info('google map error !! '.$e->getMessage());
                         }
                     }
                     $newPropertyDetails->ListPrice = $listing['ListPrice'];
@@ -411,41 +419,48 @@ class UpdateProperty implements ShouldQueue
                     $newPropertyDetails->save();
 
                     //Update Lat Long
-                    $formattedAddr = str_replace(' ', '+', $listing['PublicAddress']);
-                    $final_address = $formattedAddr . '+' . $listing['PostalCode'];
-                    $geocodeFromAddr = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address=' . $final_address . '&key=AIzaSyCnzJ15XOMd1ntur0iXSq6VqeM4wAwkCrE');
-                    $output = json_decode($geocodeFromAddr);
-                    $data['formatted_address'] = $data['latitude'] = $data['longitude'] = '';
-                    if (isset($output->results[0]->geometry->location->lat) && $output->results[0]->geometry->location->lat != '') {
-                        $data['latitude'] = $output->results[0]->geometry->location->lat;
-                    }
+                    try{
+                        $formattedAddr = str_replace(' ', '+', $listing['PublicAddress']);
+                        $final_address = $formattedAddr . '+' . $listing['PostalCode'];
+                        $client = new Client();
+                        $geocodeFromAddr = $client->request('GET','https://maps.googleapis.com/maps/api/geocode/json?address=' . $final_address . '&key=AIzaSyCnzJ15XOMd1ntur0iXSq6VqeM4wAwkCrE');
+                        if($geocodeFromAddr->getStatusCode() == 200){
+                            $output = json_decode($geocodeFromAddr->getBody());
+                            $data['formatted_address'] = $data['latitude'] = $data['longitude'] = '';
+                            if (isset($output->results[0]->geometry->location->lat) && $output->results[0]->geometry->location->lat != '') {
+                                $data['latitude'] = $output->results[0]->geometry->location->lat;
+                            }
 
-                    if (isset($output->results[0]->geometry->location->lng) && $output->results[0]->geometry->location->lng != '') {
+                            if (isset($output->results[0]->geometry->location->lng) && $output->results[0]->geometry->location->lng != '') {
 
-                        $data['longitude'] = $output->results[0]->geometry->location->lng;
+                                $data['longitude'] = $output->results[0]->geometry->location->lng;
 
-                    }
+                            }
 
-                    if (isset($output->results[0]->formatted_address) && $output->results[0]->formatted_address
-                        != ''
-                    ) {
-                        $data['formatted_address'] = $output->results[0]->formatted_address;
-                    }
-                    $latLong = PropertyLatLong::where('Matrix_Unique_ID', $Matrix_Unique_ID)->first();
-                    if($latLong != null){
-                        $latLong->MLSNumber = $listing['MLSNumber'];
-                        $latLong->latitude = $data['latitude'];
-                        $latLong->longitude = $data['longitude'];
-                        $latLong->FormatedAddress = $data['formatted_address'];
-                        $latLong->save();
-                    } else {
-                        $latlong = new PropertyLatLong();
-                        $latlong->Matrix_Unique_ID = $listing['Matrix_Unique_ID'];
-                        $latlong->MLSNumber = $listing['MLSNumber'];
-                        $latlong->latitude = $data['latitude'];
-                        $latlong->longitude = $data['longitude'];
-                        $latlong->FormatedAddress = $data['formatted_address'];
-                        $latlong->save();
+                            if (isset($output->results[0]->formatted_address) && $output->results[0]->formatted_address
+                                != ''
+                            ) {
+                                $data['formatted_address'] = $output->results[0]->formatted_address;
+                            }
+                            $latLong = PropertyLatLong::where('Matrix_Unique_ID', $Matrix_Unique_ID)->first();
+                            if($latLong != null){
+                                $latLong->MLSNumber = $listing['MLSNumber'];
+                                $latLong->latitude = $data['latitude'];
+                                $latLong->longitude = $data['longitude'];
+                                $latLong->FormatedAddress = $data['formatted_address'];
+                                $latLong->save();
+                            } else {
+                                $latlong = new PropertyLatLong();
+                                $latlong->Matrix_Unique_ID = $listing['Matrix_Unique_ID'];
+                                $latlong->MLSNumber = $listing['MLSNumber'];
+                                $latlong->latitude = $data['latitude'];
+                                $latlong->longitude = $data['longitude'];
+                                $latlong->FormatedAddress = $data['formatted_address'];
+                                $latlong->save();
+                            }
+                        }
+                    } catch (\Exception $e){
+                        Log::info('google map error !! '.$e->getMessage());
                     }
                 }
                 //Update Property Additional
