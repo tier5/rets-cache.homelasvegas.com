@@ -53,9 +53,11 @@ class UpdateProperty implements ShouldQueue
             $rets->AddHeader("RETS-Version", "RETS/1.7.2");
             $connect = $rets->Connect($rets_login_url, $rets_username, $rets_password);
             if ($connect) {
+                Log::info('connect');
                 $query = "(Matrix_Unique_ID={$Matrix_Unique_ID})";
                 $search = $rets->Search("Property", "Listing", $query, array("StandardNames" => 0));
                 $listing = $search[0];
+                Log::info('Get Result from Rets');
                 if (isset($listing['BathsHalf']) && $listing['BathsHalf'] != '') {
                     $BathsHalf = $listing['BathsHalf'];
                 } else {
@@ -334,6 +336,7 @@ class UpdateProperty implements ShouldQueue
                 }
                 //Update Project Details Table
                 $newPropertyDetails = PropertyDetail::where('Matrix_Unique_ID', $Matrix_Unique_ID)->first();
+                Log::info('Property Details');
                 if ($newPropertyDetails != null) {
                     //Update Lat Long
                     if ($newPropertyDetails->PublicAddress != $listing['PublicAddress']) {
@@ -464,6 +467,7 @@ class UpdateProperty implements ShouldQueue
                     }
                 }
                 //Update Property Additional
+                Log::info('Property Additional');
                 $is_property_additional = PropertyAdditional::where('Matrix_Unique_ID', '=', $listing['Matrix_Unique_ID'])->first();
                 if ($is_property_additional) {
                     $is_property_additional->MLSNumber = $listing['MLSNumber'];
@@ -539,6 +543,7 @@ class UpdateProperty implements ShouldQueue
                     $propertyadditional->YearRoundSchoolYN = $YearRoundSchoolYN;
                     $propertyadditional->save();
                 }
+                Log::info('Property External');
                 //Update Property External feature
                 $is_property_external_feature = PropertyExternalFeature::where('Matrix_Unique_ID', '=', $listing['Matrix_Unique_ID'])->first();
                 if ($is_property_external_feature) {
@@ -600,6 +605,7 @@ class UpdateProperty implements ShouldQueue
                     $propertyexternalfeature->ParkingDescription = $listing['ParkingDescription'];
                     $propertyexternalfeature->save();
                 }
+                Log::info('Property Feature');
                 //Update Property Feature
                 $is_property_feature = PropertyFeature::where('Matrix_Unique_ID', '=', $listing['Matrix_Unique_ID'])->first();
                 if ($is_property_feature) {
@@ -621,6 +627,7 @@ class UpdateProperty implements ShouldQueue
                     $propertyfeature->MLSNumber = $listing['MLSNumber'];
                     $propertyfeature->save();
                 }
+                Log::info('property_financial_details');
                 //Update property_financial_details
                 $is_property_financial_detail = PropertyFinancialDetail::where('Matrix_Unique_ID', '=', $listing['Matrix_Unique_ID'])->first();
                 if ($is_property_financial_detail) {
@@ -660,10 +667,9 @@ class UpdateProperty implements ShouldQueue
                     $propertyfinancialdetail->SIDLIDYN = $SIDLIDYN;
                     $propertyfinancialdetail->save();
                 }
+                Log::info('Update Images');
                 //Update Images
                 $photos = $rets->GetObject("Property", "LargePhoto", $listing['Matrix_Unique_ID'], "*", 0);
-                //dd($photos);exit;
-
                 $deleteImage = PropertyImage::where('Matrix_Unique_ID', '=', $listing['Matrix_Unique_ID'])->delete();
                 $contentType = $property_image = '';
                 $content_id = $object_id = $Success = 0;
@@ -699,6 +705,7 @@ class UpdateProperty implements ShouldQueue
                     $propertyimage->ContentDesc = $ContentDescription;
                     $propertyimage->save();
                 }
+                Log::info('property_interior_features');
                 //Update property_interior_features
                 $is_property_interior_feature = PropertyInteriorFeature::where('Matrix_Unique_ID', '=', $listing['Matrix_Unique_ID'])->first();
                 if ($is_property_interior_feature) {
@@ -768,6 +775,7 @@ class UpdateProperty implements ShouldQueue
                     $propertyfinancialdetail->Water = $listing['Water'];
                     $propertyfinancialdetail->save();
                 }
+                Log::info('Property Location');
                 //Update Property Location
                 $is_property_location = PropertyLocation::where('Matrix_Unique_ID', '=', $listing['Matrix_Unique_ID'])->first();
                 if ($is_property_location) {
@@ -809,5 +817,6 @@ class UpdateProperty implements ShouldQueue
         } catch (\Exception $e) {
             Log::info($e->getMessage());
         }
+        Log::info('Queue Stop');
     }
 }

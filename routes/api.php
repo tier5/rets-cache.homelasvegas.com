@@ -29,4 +29,5 @@ Route::group(array('prefix' => 'rets/v1'), function () {
 Route::group(['prefix' => 'rets/v2'],function (){
     Route::get('global_search',"ApiControllerV2@globalSearch");
     Route::get('view_more/{matrix_unique_id}','ApiControllerV2@viewMore');
+    Route::get('photo_gallery/{matrix_unique_id}/{mls_number}','ApiController@photoGallery');
 });
