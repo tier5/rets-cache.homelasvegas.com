@@ -96,7 +96,6 @@ class APIController extends Controller
 
     public function homepage_listing(Request $request)
     {
-
         $city = $request['city'];
         $min_price = $request['min_price'];
         $max_price = $request['max_price'];
@@ -177,7 +176,7 @@ class APIController extends Controller
         $PropertyLocation_count = collect($PropertyLocation_full);
         $PropertyLocation_full_count = $PropertyLocation_count->count();
         //dd($PropertyLocation_full_count);
-//$PropertyLocation = PropertyDetail::whereHas('propertyfeature', function ($newquery) use ($property_type) {$newquery->where('PropertyType', '=',$property_type);})->where('City','=',$city)->where('ListPrice','>=',$min_price)->where('ListPrice','<=',$max_price)->where('SqFtTotal','>=',$square_feet)->where('NumAcres','=',$acres)->orderBy($sortbyfield,$sorttype)
+        //$PropertyLocation = PropertyDetail::whereHas('propertyfeature', function ($newquery) use ($property_type) {$newquery->where('PropertyType', '=',$property_type);})->where('City','=',$city)->where('ListPrice','>=',$min_price)->where('ListPrice','<=',$max_price)->where('SqFtTotal','>=',$square_feet)->where('NumAcres','=',$acres)->orderBy($sortbyfield,$sorttype)
         //->with(['propertyfeature','propertyadditional','propertyexternalfeature','propertyimage','propertyfinancialdetail','propertyinteriorfeature','propertyinteriorfeature','propertylatlong','propertylocation'])->get();
         //$wordCount = $PropertyLocation->count();
         //dd($wordCount);
@@ -363,7 +362,10 @@ class APIController extends Controller
                     $photos = $rets->GetObject("Property", "LargePhoto", $matrix_unique_id, "*", 0);
                     $imagejob = (new InsertImages($matrix_unique_id, $PropertyLocation->MLSNumber));
                     $this->dispatch($imagejob);
-                    $PropertyLocation->propertyimage = $photos;
+                    return response()->json([
+                        'PropertyLocation'=> $PropertyLocation,
+                        'images' => $photos
+                    ]);
                 }
             }
             return response()->json($PropertyLocation);
