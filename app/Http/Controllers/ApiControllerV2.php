@@ -190,6 +190,7 @@ class ApiControllerV2 extends Controller
     public function addressSearch(Request $request)
     {
         try{
+            $perPage = 25;
             $search = PropertyDetail::query();
             if($request->has('property_type')){
                 $propertyType = $request->property_type;
@@ -210,7 +211,53 @@ class ApiControllerV2 extends Controller
                     $data->where('PropertyType', $propertyType);
                 });
             }
-           
+            if($request->has('city')){
+                $city = explode(',',$request->city);
+                $search->whereIn('City',$city);
+            }
+            if($request->has('county')){
+                $county = explode(',',$request->county);
+                $search->whereHas('propertyfeature', function ($new3query) use ($county) {
+                    $new3query->whereIn('CountyOrParish', $county);
+                });
+            }
+            if($request->has('postal_code')){
+                $postalCode = explode(',',$request->postal_code);
+                $search->whereIn('PostalCode',$postalCode);
+            }
+            if($request->has('house_number')){
+                $house_number = explode(',', $request->house_number);
+                $search->whereHas('propertyadditional', function ($new4query) use ($house_number) {
+                    $new4query->where('PublicAddress', 'Like', '%' . $house_number . '%');
+                });
+            }
+            if($request->has('house_deriction')){
+                $house_derictions = explode(',',$request->house_deriction);
+                $search->whereHas('propertyadditional', function ($new4query) use ($house_derictions) {
+                    $new4query->where('PublicAddress', 'Like', '%' . $house_derictions . '%');
+                });
+            }
+            if($request->has('house_name')){
+                $house_name = explode(',',$request->house_name);
+                $search->whereHas('propertyadditional', function ($new4query) use ($house_name) {
+                    $new4query->where('PublicAddress', 'Like', '%' . $house_name . '%');
+                });
+            }
+            $searchResult = $search
+                ->with(['propertyfeature', 'propertyadditional', 'propertyexternalfeature', 'propertyimage', 'propertyfinancialdetail', 'propertyinteriorfeature', 'propertyinteriorfeature', 'propertylatlong', 'propertylocation'])
+                ->paginate($perPage);
+            if(count($searchResult) > 0){
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Address Search Result',
+                    'results' => $searchResult
+                ],200);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No Record Found',
+                ],404);
+            }
         } catch (\Exception $e){
             return response()->json([
                 'success' => false,
