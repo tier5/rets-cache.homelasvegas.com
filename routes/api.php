@@ -25,3 +25,7 @@ Route::group(array('prefix' => 'rets/v1'), function () {
     Route::get('printable_flyer/{matrix_unique_id}', 'APIController@printable_flyer');
     Route::get('test/{Matrix_Unique_ID}','APIController@thresholdCheck');
 });
+
+Route::group(['prefix' => 'rets/v2'],function (){
+    Route::get('global_search',"ApiControllerV2@globalSearch");
+});
