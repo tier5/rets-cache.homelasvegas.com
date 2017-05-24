@@ -34,6 +34,9 @@ class UpdateProperty implements ShouldQueue
     public function __construct($Matrix_Unique_ID)
     {
         $this->Matrix_Unique_ID = $Matrix_Unique_ID;
+        ini_set('max_execution_time', 30000000);
+        set_time_limit(0);
+        ini_set('memory_limit', '256M');
     }
 
     /**

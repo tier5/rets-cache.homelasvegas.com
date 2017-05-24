@@ -349,25 +349,6 @@ class APIController extends Controller
             $PropertyLocation = PropertyDetail::where('Matrix_Unique_ID', '=', $matrix_unique_id)
                 ->with(['propertyfeature', 'propertyadditional', 'propertyexternalfeature', 'propertyimage', 'propertyfinancialdetail', 'propertyinteriorfeature', 'propertyinteriorfeature', 'propertylatlong', 'propertylocation'])
                 ->first();
-            if (count($PropertyLocation->propertyimage) < 3) {
-                $rets_login_url = "http://rets.las.mlsmatrix.com/rets/login.ashx";
-                $rets_username = "neal";
-                $rets_password = "glvar";
-                $rets = new phRETS;
-                $rets->AddHeader("RETS-Version", "RETS/1.7.2");
-                $connect = $rets->Connect($rets_login_url, $rets_username, $rets_password);
-                if ($connect) {
-                    $query = "(Matrix_Unique_ID={$matrix_unique_id})";
-                    $search = $rets->Search("Property", "Listing", $query, array("StandardNames" => 0));
-                    $photos = $rets->GetObject("Property", "LargePhoto", $matrix_unique_id, "*", 0);
-                    $imagejob = (new InsertImages($matrix_unique_id, $PropertyLocation->MLSNumber));
-                    $this->dispatch($imagejob);
-                    return response()->json([
-                        'PropertyLocation'=> $PropertyLocation,
-                        'images' => $photos
-                    ]);
-                }
-            }
             return response()->json($PropertyLocation);
         } catch (\Exception $e){
             return response()->json($e->getMessage());
