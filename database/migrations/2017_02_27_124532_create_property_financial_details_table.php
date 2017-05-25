@@ -42,6 +42,6 @@ class CreatePropertyFinancialDetailsTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('property_financial_details');
     }
 }

@@ -108,6 +108,7 @@ class ImportData implements ShouldQueue
                 $search_result = array();
                 $key = 0;
                 while ($listing = $rets->FetchRow($search)) {
+                    Log::info($key);
                     $search_result[$key]['Matrix_Unique_ID'] = $listing['Matrix_Unique_ID'];
                     $search_result[$key]['StreetNumber'] = $listing['StreetNumber'];
                     $search_result[$key]['StreetName'] = $listing['StreetName'];

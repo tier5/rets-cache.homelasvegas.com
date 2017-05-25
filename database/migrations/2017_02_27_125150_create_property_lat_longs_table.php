@@ -30,6 +30,6 @@ class CreatePropertyLatLongsTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('property_lat_longs');
     }
 }

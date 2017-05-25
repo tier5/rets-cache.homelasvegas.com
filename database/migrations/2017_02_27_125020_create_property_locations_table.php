@@ -41,6 +41,6 @@ class CreatePropertyLocationsTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('property_locations');
     }
 }
