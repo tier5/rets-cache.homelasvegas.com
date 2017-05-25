@@ -487,6 +487,7 @@ class ImportData implements ShouldQueue
                         $is_property->PhotoCount = $listing['PhotoCount'];
                         $is_property->PublicAddress = $listing['PublicAddress'];
                         $is_property->VirtualTourLink = $listing['VirtualTourLink'];
+                        $is_property->OriginalEntryTimestamp = $listing['OriginalEntryTimestamp'];
                         $is_property->save();
                     } else {
                         $property = new PropertyDetail();
@@ -507,6 +508,7 @@ class ImportData implements ShouldQueue
                         $property->PhotoCount = $listing['PhotoCount'];
                         $property->PublicAddress = $listing['PublicAddress'];
                         $property->VirtualTourLink = $listing['VirtualTourLink'];
+                        $property->OriginalEntryTimestamp = $listing['OriginalEntryTimestamp'];
                         $property->save();
                     }
                     $is_property_feature = PropertyFeature::where('Matrix_Unique_ID', '=', $listing['Matrix_Unique_ID'])->first();

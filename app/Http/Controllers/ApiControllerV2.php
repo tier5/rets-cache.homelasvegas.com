@@ -107,7 +107,11 @@ class ApiControllerV2 extends Controller
                 $searchResult->where('NumAcres',$request->acres);
             }
             if($request->has('max_days_listed')){
-                //no data base found
+                
+                 $now = Carbon::now();
+                 $date = $now->subDays($request->max_days_listed);
+                $searchResult->where('OriginalEntryTimestamp','<=',$date->toDateTimeString());
+                
             }
             if($request->has('status')){
                 $status = explode(',',$request->status);
