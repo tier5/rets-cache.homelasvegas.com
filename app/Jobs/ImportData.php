@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Citylist;
 use App\PropertyImage;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
@@ -34,7 +35,7 @@ class ImportData implements ShouldQueue
         $this->city = $city;
         ini_set('max_execution_time', 30000000);
         set_time_limit(0);
-        ini_set('memory_limit', '256M');
+        ini_set('memory_limit', '512M');
     }
 
     /**
@@ -104,6 +105,9 @@ class ImportData implements ShouldQueue
                 $search = $rets->SearchQuery("Property", "Listing", $query, array("StandardNames" => 0));
                 $result_count = $rets->TotalRecordsFound();
                 Log::info('total record : ' . $rets->TotalRecordsFound());
+                $city=Citylist::where('name',$this->city)->first();
+                $city->total = $result_count;
+                $city->update();
                 $total_records = $pages = ceil($result_count / $limit);
                 $search_result = array();
                 $key = 0;
@@ -811,8 +815,12 @@ class ImportData implements ShouldQueue
                         $propertylocation->TaxDistrict = $listing['TaxDistrict'];
                         $propertylocation->save();
                     }
+                    $city->inserted = $key;
+                    $city->update();
                     $key++;
                 }
+                $rets->FreeResult($search);
+                $rets->Disconnect();
                 foreach ($search_result as $add => $address) {
                     $formattedAddr = str_replace(' ', '+', $address['PublicAddress']);
                     $final_address = $formattedAddr . '+' . $address['PostalCode'];

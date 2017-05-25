@@ -65,7 +65,11 @@ class phRETS {
 	private $override_offset_protection = false;
 	private $use_post_method = false;
 	private $search_data = array();
-	public function __construct() { }
+	public function __construct() {
+        ini_set('max_execution_time', 300000000000);
+        set_time_limit(0);
+        ini_set('memory_limit', '1024M');
+    }
 	public function GetLastServerResponse() {
 		return $this->last_server_response;
 	}

@@ -101,7 +101,7 @@ class ApiControllerV2 extends Controller
                 $searchResult->where('ListPrice','>=',$request->min_price);
             }
             if($request->has('max_price')){
-                $searchResult->where('ListPrice','<=',$request->min_price);
+                $searchResult->where('ListPrice','<=',$request->max_price);
             }
             if($request->has('acres')){
                 $searchResult->where('NumAcres',$request->acres);

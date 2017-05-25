@@ -60,9 +60,8 @@ class SearchController extends Controller
 
     public function test()
     {
-        echo $message = 'hello';
-        $job = (new InserSearchList());
-        $this->dispatch($job);
+        dd('here');
+
     }
 
     public function do_search(Request $request, $offset)
@@ -1036,8 +1035,6 @@ class SearchController extends Controller
                         $latlong->save();
                     }
                 }
-
-
             }
 
 
