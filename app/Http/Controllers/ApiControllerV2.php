@@ -67,6 +67,101 @@ class ApiControllerV2 extends Controller
             ], 500);
         }
     }
+    public function retsSearch(Request $request)
+    {
+        try{
+            $searchResult = PropertyDetail::query();
+            if($request->has('city')){
+                $searchResult->where('City',$request->city);
+            }
+            if($request->has('square_feet')){
+                $searchResult->where('SqFtTotal','>=',$request->square_feet);
+            }
+            if($request->has('min_price')){
+                $searchResult->where('ListPrice','>=',$request->min_price);
+            }
+            if ($request->has('search_community')) {
+                $search_community = $request->search_community;
+                $searchResult->WhereHas('propertylocation', function ($query) use ($search_community) {
+                    $query->where('CommunityName', $search_community);
+                });
+            }
+            if($request->has('max_price')){
+                $searchResult->where('ListPrice','<=',$request->max_price);
+            }
+            if($request->has('max_days_listed')){
+
+                $now = Carbon::now();
+                $date = $now->subDays($request->max_days_listed);
+                $searchResult->where('OriginalEntryTimestamp','<=',$date->toDateTimeString());
+
+            }
+            if($request->has('status')){
+                $status = explode(',',$request->status);
+                $searchResult->whereIn('Status',$status);
+            }
+            if($request->has('result_per_page')){
+                $perPage = $request->result_per_page;
+            } else {
+                $perPage = 25;
+            }
+            if($request->has('sort_by')){
+                $sort_by = $request->sort_by;
+                if ($sort_by == 'listing_desc') {
+                    $sortbyfield = 'created_at';
+                    $sorttype = 'DESC';
+                } elseif ($sort_by == 'listing_asc') {
+                    $sortbyfield = 'created_at';
+                    $sorttype = 'ASC';
+                } elseif ($sort_by == 'pricing_asc') {
+                    $sortbyfield = 'ListPrice';
+                    $sorttype = 'ASC';
+                } elseif ($sort_by == 'pricing_desc') {
+                    $sortbyfield = 'ListPrice';
+                    $sorttype = 'DESC';
+                } elseif ($sort_by == 'bedrooms_asc') {
+                    $sortbyfield = 'BedroomsTotalPossibleNum';
+                    $sorttype = 'ASC';
+                } elseif ($sort_by == 'bedrooms_desc') {
+                    $sortbyfield = 'BedroomsTotalPossibleNum';
+                    $sorttype = 'DESC';
+                } elseif ($sort_by == 'bathrooms_asc') {
+                    $sortbyfield = 'BathsTotal';
+                    $sorttype = 'ASC';
+                } elseif ($sort_by == 'bathrooms_desc') {
+                    $sortbyfield = 'BathsTotal';
+                    $sorttype = 'DESC';
+                } elseif ($sort_by == 'squarefeet_asc') {
+                    $sortbyfield = 'SqFtTotal';
+                    $sorttype = 'ASC';
+                } else {
+                    $sortbyfield = 'SqFtTotal';
+                    $sorttype = 'DESC';
+                }
+                $searchResult->orderBy($sortbyfield,$sorttype);
+            }
+            $result = $searchResult
+                ->with(['propertyfeature', 'propertyadditional', 'propertyexternalfeature', 'propertyimage', 'propertyfinancialdetail', 'propertyinteriorfeature', 'propertyinteriorfeature', 'propertylatlong', 'propertylocation'])
+                ->paginate($perPage);
+            if(count($result) > 0){
+                return response()->json([
+                    'success' => true,
+                    'message' => 'rets Search Result',
+                    'results' => $result
+                ],200);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No Record Found',
+                ],404);
+            }
+        } catch (\Exception $e){
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ],500);
+        }
+    }
     public function advanceSearch(Request $request)
     {
         try{

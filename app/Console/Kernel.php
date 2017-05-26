@@ -33,9 +33,9 @@ class Kernel extends ConsoleKernel
         //          ->hourly();
         /*$schedule->command('queue:work')->cron('* * * * * *');*/
         //$schedule->command('store:searchresult')->everyMinute();
-         $schedule->call(function () {
+         /*$schedule->call(function () {
             $check_draw = new InserSearchList();
-        })->dailyAt('00:01');
+        })->dailyAt('00:01');*/
 
         /*$schedule->call('App\Http\Controllers\SearchController@test')
                 ->everyMinute();*/

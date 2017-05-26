@@ -815,7 +815,7 @@ class ImportData implements ShouldQueue
                         $propertylocation->TaxDistrict = $listing['TaxDistrict'];
                         $propertylocation->save();
                     }
-                    $city->inserted = $key;
+                    $city->inserted = $key+1;
                     $city->update();
                     $key++;
                 }

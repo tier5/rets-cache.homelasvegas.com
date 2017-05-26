@@ -28,6 +28,7 @@ Route::group(array('prefix' => 'rets/v1'), function () {
 
 Route::group(['prefix' => 'rets/v2'],function (){
     Route::get('global_search',"ApiControllerV2@globalSearch");
+    Route::get('rets_search',"ApiControllerV2@retsSearch");
     Route::get('advance_search','ApiControllerV2@advanceSearch');
     Route::get('address_search', 'ApiControllerV2@addressSearch');
     Route::get('advance_listing', 'ApiControllerV2@advanceListing');
