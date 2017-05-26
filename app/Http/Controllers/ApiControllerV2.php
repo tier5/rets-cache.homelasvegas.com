@@ -325,22 +325,25 @@ class ApiControllerV2 extends Controller
                 $search->whereIn('PostalCode',$postalCode);
             }
             if($request->has('house_number')){
-                $house_number = explode(',', $request->house_number);
-                $search->whereHas('propertyadditional', function ($new4query) use ($house_number) {
+                $house_number = $request->house_number;
+                $search->whereIn('PublicAddress','LIKE','%'.$house_number.'%');
+                /*$search->whereHas('propertyadditional', function ($new4query) use ($house_number) {
                     $new4query->whereIn('PublicAddress', 'Like', '%' . $house_number . '%');
-                });
+                });*/
             }
             if($request->has('house_deriction')){
-                $house_derictions = explode(',',$request->house_deriction);
-                $search->whereHas('propertyadditional', function ($new4query) use ($house_derictions) {
+                $house_derictions = $request->house_deriction;
+                $search->whereIn('PublicAddress','LIKE','%'.$house_derictions.'%');
+                /*$search->whereHas('propertyadditional', function ($new4query) use ($house_derictions) {
                     $new4query->whereIn('PublicAddress', 'Like', '%' . $house_derictions . '%');
-                });
+                });*/
             }
             if($request->has('house_name')){
-                $house_name = explode(',',$request->house_name);
-                $search->whereHas('propertyadditional', function ($new4query) use ($house_name) {
+                $house_name = $request->house_name;
+                $search->whereIn('PublicAddress','LIKE','%'.$house_name.'%');
+                /*$search->whereHas('propertyadditional', function ($new4query) use ($house_name) {
                     $new4query->whereIn('PublicAddress', 'Like', '%' . $house_name . '%');
-                });
+                });*/
             }
             $searchResult = $search
                 ->with(['propertyfeature', 'propertyadditional', 'propertyexternalfeature', 'propertyimage', 'propertyfinancialdetail', 'propertyinteriorfeature', 'propertyinteriorfeature', 'propertylatlong', 'propertylocation'])
