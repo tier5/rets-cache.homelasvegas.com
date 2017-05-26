@@ -82,7 +82,7 @@ class ApiControllerV2 extends Controller
             }
             if ($request->has('search_community')) {
                 $search_community = $request->search_community;
-                $searchResult->WhereHas('propertylocation', function ($query) use ($search_community) {
+                $resWhereHas('propertylocation', function ($query) use ($search_community) {
                     $query->where('CommunityName', $search_community);
                 });
             }
@@ -327,19 +327,19 @@ class ApiControllerV2 extends Controller
             if($request->has('house_number')){
                 $house_number = explode(',', $request->house_number);
                 $search->whereHas('propertyadditional', function ($new4query) use ($house_number) {
-                    $new4query->where('PublicAddress', 'Like', '%' . $house_number . '%');
+                    $new4query->whereIn('PublicAddress', 'Like', '%' . $house_number . '%');
                 });
             }
             if($request->has('house_deriction')){
                 $house_derictions = explode(',',$request->house_deriction);
                 $search->whereHas('propertyadditional', function ($new4query) use ($house_derictions) {
-                    $new4query->where('PublicAddress', 'Like', '%' . $house_derictions . '%');
+                    $new4query->whereIn('PublicAddress', 'Like', '%' . $house_derictions . '%');
                 });
             }
             if($request->has('house_name')){
                 $house_name = explode(',',$request->house_name);
                 $search->whereHas('propertyadditional', function ($new4query) use ($house_name) {
-                    $new4query->where('PublicAddress', 'Like', '%' . $house_name . '%');
+                    $new4query->whereIn('PublicAddress', 'Like', '%' . $house_name . '%');
                 });
             }
             $searchResult = $search
