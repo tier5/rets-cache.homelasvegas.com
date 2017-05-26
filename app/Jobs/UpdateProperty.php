@@ -34,9 +34,9 @@ class UpdateProperty implements ShouldQueue
     public function __construct($Matrix_Unique_ID)
     {
         $this->Matrix_Unique_ID = $Matrix_Unique_ID;
-        ini_set('max_execution_time', 30000000);
+        ini_set('max_execution_time', 3000000000);
         set_time_limit(0);
-        ini_set('memory_limit', '256M');
+        ini_set('memory_limit', '521M');
     }
 
     /**
@@ -191,20 +191,16 @@ class UpdateProperty implements ShouldQueue
                 } else {
                     $EarnestDeposit = 0;
                 }
-
-
                 if (isset($listing['MasterPlanFeeAmount']) && $listing['MasterPlanFeeAmount'] != '') {
                     $MasterPlanFeeAmount = $listing['MasterPlanFeeAmount'];
                 } else {
                     $MasterPlanFeeAmount = 0;
                 }
-
                 if (isset($listing['RepoReoYN']) && $listing['RepoReoYN'] != '') {
                     $RepoReoYN = $listing['RepoReoYN'];
                 } else {
                     $RepoReoYN = 0;
                 }
-
                 if (isset($listing['ShortSale']) && $listing['ShortSale'] != '') {
                     $ShortSale = $listing['ShortSale'];
                 } else {
@@ -216,27 +212,22 @@ class UpdateProperty implements ShouldQueue
                 } else {
                     $SIDLIDYN = 0;
                 }
-
                 //------------------------------------------
-
                 if (isset($listing['ApproxTotalLivArea']) && $listing['ApproxTotalLivArea'] != '') {
                     $ApproxTotalLivArea = $listing['ApproxTotalLivArea'];
                 } else {
                     $ApproxTotalLivArea = 0;
                 }
-
                 if (isset($listing['BathDownYN']) && $listing['BathDownYN'] != '') {
                     $BathDownYN = $listing['BathDownYN'];
                 } else {
                     $BathDownYN = 0;
                 }
-
                 if (isset($listing['BedroomDownstairsYN']) && $listing['BedroomDownstairsYN'] != '') {
                     $BedroomDownstairsYN = $listing['BedroomDownstairsYN'];
                 } else {
                     $BedroomDownstairsYN = 0;
                 }
-
                 if (isset($listing['BedroomsTotalPossibleNum']) && $listing['BedroomsTotalPossibleNum'] != '') {
                     $BedroomsTotalPossibleNum = $listing['BedroomsTotalPossibleNum'];
                 } else {
@@ -339,7 +330,6 @@ class UpdateProperty implements ShouldQueue
                 }
                 //Update Project Details Table
                 $newPropertyDetails = PropertyDetail::where('Matrix_Unique_ID', $Matrix_Unique_ID)->first();
-                Log::info('Property Details');
                 if ($newPropertyDetails != null) {
                     //Update Lat Long
                     if ($newPropertyDetails->PublicAddress != $listing['PublicAddress']) {
@@ -423,26 +413,21 @@ class UpdateProperty implements ShouldQueue
                     $newPropertyDetails->PublicAddress = $listing['PublicAddress'];
                     $newPropertyDetails->VirtualTourLink = $listing['VirtualTourLink'];
                     $newPropertyDetails->save();
-
                     //Update Lat Long
                     try{
                         $formattedAddr = str_replace(' ', '+', $listing['PublicAddress']);
                         $final_address = $formattedAddr . '+' . $listing['PostalCode'];
                         $client = new Client();
-                        $geocodeFromAddr = $client->request('GET','https://maps.googleapis.com/maps/api/geocode/json?address=' . $final_address . '&key=AIzaSyCnzJ15XOMd1ntur0iXSq6VqeM4wAwkCrE');
+                        $geocodeFromAddr = $client->request('GET','https://maps.googleapis.com/maps/api/geocode/json?address=' . $final_address . '&key=AIzaSyAiM-k4mIbjtiTSSF1i5iE8s6CQK3tp2U');
                         if($geocodeFromAddr->getStatusCode() == 200){
                             $output = json_decode($geocodeFromAddr->getBody());
                             $data['formatted_address'] = $data['latitude'] = $data['longitude'] = '';
                             if (isset($output->results[0]->geometry->location->lat) && $output->results[0]->geometry->location->lat != '') {
                                 $data['latitude'] = $output->results[0]->geometry->location->lat;
                             }
-
                             if (isset($output->results[0]->geometry->location->lng) && $output->results[0]->geometry->location->lng != '') {
-
                                 $data['longitude'] = $output->results[0]->geometry->location->lng;
-
                             }
-
                             if (isset($output->results[0]->formatted_address) && $output->results[0]->formatted_address
                                 != ''
                             ) {

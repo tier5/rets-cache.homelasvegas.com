@@ -113,36 +113,6 @@ class ImportData implements ShouldQueue
                 $key = 0;
                 while ($listing = $rets->FetchRow($search)) {
                     Log::info($key);
-                    $search_result[$key]['Matrix_Unique_ID'] = $listing['Matrix_Unique_ID'];
-                    $search_result[$key]['StreetNumber'] = $listing['StreetNumber'];
-                    $search_result[$key]['StreetName'] = $listing['StreetName'];
-                    $search_result[$key]['City'] = $listing['City'];
-                    $search_result[$key]['Area'] = $listing['Area'];
-                    $search_result[$key]['StateOrProvince'] = $listing['StateOrProvince'];
-                    $search_result[$key]['SqFtTotal'] = $listing['SqFtTotal'];
-                    $search_result[$key]['Status'] = $listing['Status'];
-                    $search_result[$key]['PublicAddress'] = $listing['PublicAddress'];
-                    $search_reuslt[$key]['PublicAddressYN'] = $listing['PublicAddressYN'];
-                    $search_reuslt[$key]['PublicRemarks'] = $listing['PublicRemarks'];
-                    $search_reuslt[$key]['ListAgentMLSID'] = $listing['ListAgentMLSID'];
-                    $search_reuslt[$key]['ListAgentFullName'] = $listing['ListAgentFullName'];
-                    $search_reuslt[$key]['ListOfficeName'] = $listing['ListOfficeName'];
-                    $search_reuslt[$key]['ListAgentDirectWorkPhone'] = $listing['ListAgentDirectWorkPhone'];
-                    $search_result[$key]['ListPrice'] = $listing['ListPrice'];
-                    $search_result[$key]['BathsTotal'] = $listing['BathsTotal'];
-                    $search_result[$key]['BathsHalf'] = $listing['BathsHalf'];
-                    $search_result[$key]['BathsFull'] = $listing['BathsFull'];
-                    $search_result[$key]['NumAcres'] = $listing['NumAcres'];
-                    $search_result[$key]['BedroomsTotalPossibleNum'] = $listing['BedroomsTotalPossibleNum'];
-                    $search_result[$key]['VirtualTourLink'] = $listing['VirtualTourLink'];
-                    $search_result[$key]['PostalCode'] = $listing['PostalCode'];
-                    $search_result[$key]['NumGAcres'] = $listing['NumGAcres'];
-                    $search_result[$key]['PhotoCount'] = $listing['PhotoCount'];
-                    $search_result[$key]['MLSNumber'] = $listing['MLSNumber'];
-                    $search_result[$key]['OriginalEntryTimestamp'] = $listing['OriginalEntryTimestamp'];
-                    $search_result[$key]['CommunityName'] = $listing['CommunityName'];
-
-
                     $photos = $rets->GetObject("Property", "LargePhoto", $listing['Matrix_Unique_ID'], "*", 0);
                     $deleteImage = PropertyImage::where('Matrix_Unique_ID', '=', $listing['Matrix_Unique_ID'])->delete();
                     $contentType = $property_image = '';
@@ -815,56 +785,59 @@ class ImportData implements ShouldQueue
                         $propertylocation->TaxDistrict = $listing['TaxDistrict'];
                         $propertylocation->save();
                     }
+                    $is_property_latlong = PropertyLatLong::where('Matrix_Unique_ID',$listing['Matrix_Unique_ID'])->first();
+                    if($is_property_latlong == '' && $listing['PublicAddressYN'] == 1 && $listing['PublicAddress'] != ''){
+                        try{
+                            $formattedAddr = str_replace(' ', '+', $listing['PublicAddress']);
+                            $final_address = $formattedAddr . '+' . $listing['PostalCode'];
+                            $geocodeFromAddr = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address=' . $final_address . '&key=AIzaSyAiM-k4mIbjtiTSSF1i5iE8s6CQK3tp2U');
+                            $output = json_decode($geocodeFromAddr);
+
+                            $data['formatted_address'] = $data['latitude'] = $data['longitude'] = '';
+                            if (isset($output->results[0]->geometry->location->lat) && $output->results[0]->geometry->location->lat != '') {
+                                $data['latitude'] = $output->results[0]->geometry->location->lat;
+                            }
+                            if (isset($output->results[0]->geometry->location->lng) && $output->results[0]->geometry->location->lng != '') {
+
+                                $data['longitude'] = $output->results[0]->geometry->location->lng;
+                            }
+                            if (isset($output->results[0]->formatted_address) && $output->results[0]->formatted_address
+                                != ''
+                            ) {
+                                $data['formatted_address'] = $output->results[0]->formatted_address;
+                            }
+                            //Return latitude and longitude of the given address
+                            if (stripos($data['formatted_address'], $cityArray[$this->city]) !== false) {
+                                if ($is_property_latlong) {
+                                    $is_property_latlong->MLSNumber = $listing['MLSNumber'];
+                                    $is_property_latlong->latitude = $data['latitude'];
+                                    $is_property_latlong->longitude = $data['longitude'];
+                                    $is_property_latlong->FormatedAddress = $data['formatted_address'];
+                                    $is_property_latlong->save();
+                                } else {
+                                    $latlong = new PropertyLatLong();
+                                    $latlong->Matrix_Unique_ID = $listing['Matrix_Unique_ID'];
+                                    $latlong->MLSNumber = $listing['MLSNumber'];
+                                    $latlong->latitude = $data['latitude'];
+                                    $latlong->longitude = $data['longitude'];
+                                    $latlong->FormatedAddress = $data['formatted_address'];
+                                    $latlong->save();
+                                }
+                            }
+                        } catch (\Exception $e){
+                            Log::info($e->getMessage());
+                        }
+                    }
                     $city->inserted = $key+1;
                     $city->update();
                     $key++;
                 }
                 $rets->FreeResult($search);
                 $rets->Disconnect();
-                foreach ($search_result as $add => $address) {
-                    $formattedAddr = str_replace(' ', '+', $address['PublicAddress']);
-                    $final_address = $formattedAddr . '+' . $address['PostalCode'];
-                    $geocodeFromAddr = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address=' . $final_address . '&key=AIzaSyCnzJ15XOMd1ntur0iXSq6VqeM4wAwkCrE');
-                    $output = json_decode($geocodeFromAddr);
-
-                    $data[$add]['formatted_address'] = $data[$add]['latitude'] = $data[$add]['longitude'] = '';
-                    if (isset($output->results[0]->geometry->location->lat) && $output->results[0]->geometry->location->lat != '') {
-                        $data[$add]['latitude'] = $output->results[0]->geometry->location->lat;
-                    }
-                    if (isset($output->results[0]->geometry->location->lng) && $output->results[0]->geometry->location->lng != '') {
-
-                        $data[$add]['longitude'] = $output->results[0]->geometry->location->lng;
-                    }
-                    if (isset($output->results[0]->formatted_address) && $output->results[0]->formatted_address
-                        != ''
-                    ) {
-                        $data[$add]['formatted_address'] = $output->results[0]->formatted_address;
-                    }
-                    //Return latitude and longitude of the given address
-                    $is_property_latlong = PropertyLatLong::where('Matrix_Unique_ID', '=', $address['Matrix_Unique_ID'])->first();
-                    if (stripos($data[$add]['formatted_address'], $cityArray[$this->city]) !== false) {
-                        if ($is_property_latlong) {
-                            $is_property_latlong->MLSNumber = $address['MLSNumber'];
-                            $is_property_latlong->latitude = $data[$add]['latitude'];
-                            $is_property_latlong->longitude = $data[$add]['longitude'];
-                            $is_property_latlong->FormatedAddress = $data[$add]['formatted_address'];
-                            $is_property_latlong->save();
-                        } else {
-                            $latlong = new PropertyLatLong();
-                            $latlong->Matrix_Unique_ID = $address['Matrix_Unique_ID'];
-                            $latlong->MLSNumber = $address['MLSNumber'];
-                            $latlong->latitude = $data[$add]['latitude'];
-                            $latlong->longitude = $data[$add]['longitude'];
-                            $latlong->FormatedAddress = $data[$add]['formatted_address'];
-                            $latlong->save();
-                        }
-                    }
-                }
             }
         } catch (\Exception $e) {
             Log::info('error job !! ' . $e->getMessage());
         }
         Log::info('Your Queue is finish');
-
     }
 }
