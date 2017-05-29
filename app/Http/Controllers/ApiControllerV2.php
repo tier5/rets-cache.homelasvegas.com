@@ -164,10 +164,10 @@ class ApiControllerV2 extends Controller
     }
     public function advanceSearch(Request $request)
     {
-        //try{
+        try{
             $searchResult = PropertyDetail::query();
             if($request->has('city')){
-                $city = $request->city;
+                $city = explode(',',$request->city);
                 $searchResult->whereIn('City',$city);
             }
             if($request->has('property_type')){
@@ -279,12 +279,12 @@ class ApiControllerV2 extends Controller
                     'message' => 'No Record Found',
                 ],404);
             }
-        /*} catch (\Exception $e){
+        } catch (\Exception $e){
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage()
             ],500);
-        }*/
+        }
     }
     public function addressSearch(Request $request)
     {
