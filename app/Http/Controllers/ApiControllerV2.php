@@ -224,7 +224,7 @@ class ApiControllerV2 extends Controller
                 $perPage = 25;
             }
             if($request->has('property_sub_type')){
-                $propertySubType = $request->property_sub_type;
+                $propertySubType = explode(',',$request->property_sub_type);
                 $searchResult->whereHas('propertyfeature', function ($new2query) use ($propertySubType) {
                     $new2query->whereIn('PropertySubType', $propertySubType);
                 });
