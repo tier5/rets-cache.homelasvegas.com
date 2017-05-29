@@ -352,7 +352,7 @@ class ApiControllerV2 extends Controller
                 $search->where('PhotoCount','>',0);
             }
             if($request->virtual_tour == 'VT'){
-                $search->whereNotNull('VirtualTourLink');
+                $search->where('VirtualTourLink','!=','');
             }
             if($request->open_house == 'OH'){
                 //Later

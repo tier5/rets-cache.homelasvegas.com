@@ -488,7 +488,8 @@ class ImportData implements ShouldQueue
                         $property->VirtualTourLink = $listing['VirtualTourLink'];
                         $property->OriginalEntryTimestamp = $listing['OriginalEntryTimestamp'];
                         $property->save();
-                        $city->inserted = $key+1;
+                        $p = $city->inserted;
+                        $city->inserted = $p+1;
                         $city->update();
                     }
                     $is_property_feature = PropertyFeature::where('Matrix_Unique_ID', '=', $listing['Matrix_Unique_ID'])->first();
