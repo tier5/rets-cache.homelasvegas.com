@@ -165,6 +165,9 @@ class ApiControllerV2 extends Controller
     public function advanceSearch(Request $request)
     {
         try{
+            ini_set('max_execution_time', 30000000);
+            set_time_limit(0);
+            ini_set('memory_limit', '2048M');
             $searchResult = PropertyDetail::query();
             if($request->has('city')){
                 $city = explode(',',$request->city);

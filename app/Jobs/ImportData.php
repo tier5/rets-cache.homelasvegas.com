@@ -38,7 +38,7 @@ class ImportData implements ShouldQueue
         $this->offset = $offset;
         ini_set('max_execution_time', 30000000);
         set_time_limit(0);
-        ini_set('memory_limit', '512M');
+        ini_set('memory_limit', '2048M');
     }
 
     /**
