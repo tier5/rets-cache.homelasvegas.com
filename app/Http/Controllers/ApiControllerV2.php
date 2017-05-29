@@ -82,8 +82,8 @@ class ApiControllerV2 extends Controller
             }
             if ($request->has('search_community')) {
                 $search_community = $request->search_community;
-                $resWhereHas('propertylocation', function ($query) use ($search_community) {
-                    $query->where('CommunityName', $search_community);
+                $searchResult->WhereHas('propertylocation', function ($query) use ($search_community) {
+                    $query->where('CommunityName',$search_community);
                 });
             }
             if($request->has('max_price')){
