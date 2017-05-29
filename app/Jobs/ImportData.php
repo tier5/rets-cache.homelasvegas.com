@@ -29,10 +29,13 @@ class ImportData implements ShouldQueue
      * @return void
      */
     public $city;
-
-    public function __construct($city)
+    public $limit;
+    public $offset;
+    public function __construct($city,$limit,$offset)
     {
         $this->city = $city;
+        $this->limit = $limit;
+        $this->offset = $offset;
         ini_set('max_execution_time', 30000000);
         set_time_limit(0);
         ini_set('memory_limit', '512M');
@@ -102,7 +105,7 @@ class ImportData implements ShouldQueue
                     $data['offset_val'] = $offset;
                 }
                 $data['count'] = $data['offset_val'] + $data['limit'];
-                $search = $rets->SearchQuery("Property", "Listing", $query, array("StandardNames" => 0));
+                $search = $rets->SearchQuery("Property", "Listing", $query, array("StandardNames" => 0, 'Limit' => $this->limit, 'Offset' => $this->offset));
                 $result_count = $rets->TotalRecordsFound();
                 Log::info('total record : ' . $rets->TotalRecordsFound());
                 $city=Citylist::where('name',$this->city)->first();
@@ -485,6 +488,8 @@ class ImportData implements ShouldQueue
                         $property->VirtualTourLink = $listing['VirtualTourLink'];
                         $property->OriginalEntryTimestamp = $listing['OriginalEntryTimestamp'];
                         $property->save();
+                        $city->inserted = $key+1;
+                        $city->update();
                     }
                     $is_property_feature = PropertyFeature::where('Matrix_Unique_ID', '=', $listing['Matrix_Unique_ID'])->first();
                     if ($is_property_feature) {
@@ -827,8 +832,6 @@ class ImportData implements ShouldQueue
                             Log::info('ERROR GOOGLE API !! '.$e->getMessage());
                         }
                     }
-                    $city->inserted = $key+1;
-                    $city->update();
                     $key++;
                 }
                 $rets->FreeResult($search);

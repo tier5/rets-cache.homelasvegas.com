@@ -36,7 +36,7 @@ class SearchController extends Controller
             $rets->AddHeader("RETS-Version", "RETS/1.7.2");
             $connect = $rets->Connect($rets_login_url, $rets_username, $rets_password);
             if ($connect) {
-                $cityList = Citylist::orderBy('id', 'desc')->get();
+                $cityList = Citylist::whereIn('id',[15])->get();//orderBy('id', 'desc')->get();
                 $count = 0;
                 foreach ($cityList as $list) {
                     $query_city = "(City={$list->name})";
@@ -46,8 +46,15 @@ class SearchController extends Controller
                     $update_city->total = $result_count_city;
                     $update_city->updated_at = Date('Y-m-d');
                     if ($update_city->save()) {
-                        $job = (new ImportData($list->name));
-                        $this->dispatch($job);
+                        if($result_count_city > 4000){
+                            for($i=0;$i<=$result_count_city;$i=$i+4000){
+                                $job = (new ImportData($list->name,4000,$i));
+                                $this->dispatch($job);
+                            }
+                        } else {
+                            $job = (new ImportData($list->name,4000,0));
+                            $this->dispatch($job);
+                        }
                         $count++;
                     }
                 }
