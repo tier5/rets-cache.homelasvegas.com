@@ -345,6 +345,15 @@ class ApiControllerV2 extends Controller
                     $new4query->whereIn('PublicAddress', 'Like', '%' . $house_name . '%');
                 });*/
             }
+            if($request->has_image == 'Image'){
+                $search->where('PhotoCount','>',0);
+            }
+            if($request->virtual_tour == 'VT'){
+                $search->whereNotNull('VirtualTourLink');
+            }
+            if($request->open_house == 'OH'){
+                //Later
+            }
             $searchResult = $search
                 ->with(['propertyfeature', 'propertyadditional', 'propertyexternalfeature', 'propertyimage', 'propertyfinancialdetail', 'propertyinteriorfeature', 'propertyinteriorfeature', 'propertylatlong', 'propertylocation'])
                 ->paginate($perPage);

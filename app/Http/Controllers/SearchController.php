@@ -26,6 +26,11 @@ class SearchController extends Controller
         $data = array();
         return view('rets.search', ['data' => $data]);
     }
+    public function getCity()
+    {
+        $data = Citylist::all();
+        return view('rets.import', ['cities' => $data]);
+    }
     public function importData()
     {
         try {
@@ -36,7 +41,45 @@ class SearchController extends Controller
             $rets->AddHeader("RETS-Version", "RETS/1.7.2");
             $connect = $rets->Connect($rets_login_url, $rets_username, $rets_password);
             if ($connect) {
-                $cityList = Citylist::whereIn('id',[15])->get();//orderBy('id', 'desc')->get();
+                $cityList = Citylist::orderBy('id', 'desc')->get();
+                $count = 0;
+                foreach ($cityList as $list) {
+                    $query_city = "(City={$list->name})";
+                    $search_query = $rets->SearchQuery("Property", "Listing", $query_city, array("StandardNames" => 0));
+                    $result_count_city = $rets->TotalRecordsFound();
+                    $update_city = Citylist::find($list->id);
+                    $update_city->total = $result_count_city;
+                    $update_city->updated_at = Date('Y-m-d');
+                    if ($update_city->save()) {
+                        if($result_count_city > 4000){
+                            for($i=0;$i<=$result_count_city;$i=$i+4000){
+                                $job = (new ImportData($list->name,4000,$i));
+                                $this->dispatch($job);
+                            }
+                        } else {
+                            $job = (new ImportData($list->name,4000,0));
+                            $this->dispatch($job);
+                        }
+                        $count++;
+                    }
+                }
+            }
+        } catch (\Exception $e) {
+            return 'error controller !! ' . $e->getMessage();
+        }
+        return "Your Data is Importing Please wait for some time";
+    }
+    public function importDataCity(Request $request)
+    {
+        try {
+            $rets_login_url = "http://rets.las.mlsmatrix.com/rets/login.ashx";
+            $rets_username = "neal";
+            $rets_password = "glvar";
+            $rets = new \phRETS();
+            $rets->AddHeader("RETS-Version", "RETS/1.7.2");
+            $connect = $rets->Connect($rets_login_url, $rets_username, $rets_password);
+            if ($connect) {
+                $cityList = Citylist::where('name',$request->city)->get();
                 $count = 0;
                 foreach ($cityList as $list) {
                     $query_city = "(City={$list->name})";

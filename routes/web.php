@@ -18,6 +18,13 @@ Route::get('/ret_search', [
     'as' => 'ret-search',
     'uses' => 'SearchController@index'
 ]);
+Route::get('/city', [
+    'uses' => 'SearchController@getCity'
+]);
+Route::post('insert/city', [
+    'as' => 'insert.city',
+    'uses' => 'SearchController@importDataCity'
+]);
 Route::post('/do_search/{offset}', [
     'as' => 'do-search',
     'uses' => 'SearchController@do_search'
