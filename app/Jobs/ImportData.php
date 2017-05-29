@@ -798,7 +798,6 @@ class ImportData implements ShouldQueue
                                 $data['latitude'] = $output->results[0]->geometry->location->lat;
                             }
                             if (isset($output->results[0]->geometry->location->lng) && $output->results[0]->geometry->location->lng != '') {
-
                                 $data['longitude'] = $output->results[0]->geometry->location->lng;
                             }
                             if (isset($output->results[0]->formatted_address) && $output->results[0]->formatted_address
@@ -825,7 +824,7 @@ class ImportData implements ShouldQueue
                                 }
                             }
                         } catch (\Exception $e){
-                            Log::info($e->getMessage());
+                            Log::info('ERROR GOOGLE API !! '.$e->getMessage());
                         }
                     }
                     $city->inserted = $key+1;
