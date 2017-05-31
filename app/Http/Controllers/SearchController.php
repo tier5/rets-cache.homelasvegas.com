@@ -18,6 +18,7 @@ use App\PropertyLocation;
 use App\PropertyLatLong;
 use App\Citylist;
 use App\Jobs\InserSearchList;
+use Illuminate\Support\Facades\Bus;
 
 class SearchController extends Controller
 {
@@ -31,7 +32,7 @@ class SearchController extends Controller
         $data = Citylist::all();
         return view('rets.import', ['cities' => $data]);
     }
-    public function importData()
+    public static function importData()
     {
         try {
             $rets_login_url = "http://rets.las.mlsmatrix.com/rets/login.ashx";
@@ -54,11 +55,11 @@ class SearchController extends Controller
                         if($result_count_city > 4000){
                             for($i=0;$i<=$result_count_city;$i=$i+4000){
                                 $job = (new ImportData($list->name,4000,$i));
-                                $this->dispatch($job);
+                                Bus::dispatch($job);
                             }
                         } else {
                             $job = (new ImportData($list->name,4000,0));
-                            $this->dispatch($job);
+                            Bus::dispatch($job);
                         }
                         $count++;
                     }

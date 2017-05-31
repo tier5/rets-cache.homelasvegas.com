@@ -18,6 +18,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         'App\Console\Commands\Searchlist',
+        Commands\ImportData::class,
         
     ];
 
