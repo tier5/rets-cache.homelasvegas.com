@@ -796,7 +796,7 @@ class ImportData implements ShouldQueue
                         try{
                             $formattedAddr = str_replace(' ', '+', $listing['PublicAddress']);
                             $final_address = $formattedAddr . '+' . $listing['PostalCode'];
-                            $geocodeFromAddr = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address=' . $final_address . '&key=AIzaSyAiM-k4mIbjtiTSSF1i5iE8s6CQK3tp2U');
+                            $geocodeFromAddr = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address=' . $final_address . '&key=AIzaSyCpUfYECkxluIkMJpQtdbFBpxiFn2xEQD8');
                             $output = json_decode($geocodeFromAddr);
 
                             $data['formatted_address'] = $data['latitude'] = $data['longitude'] = '';
