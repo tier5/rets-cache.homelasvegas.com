@@ -418,7 +418,7 @@ class UpdateProperty implements ShouldQueue
                         $formattedAddr = str_replace(' ', '+', $listing['PublicAddress']);
                         $final_address = $formattedAddr . '+' . $listing['PostalCode'];
                         $client = new Client();
-                        $geocodeFromAddr = $client->request('GET','https://maps.googleapis.com/maps/api/geocode/json?address=' . $final_address . '&key=AIzaSyAiM-k4mIbjtiTSSF1i5iE8s6CQK3tp2U');
+                        $geocodeFromAddr = $client->request('GET','https://maps.googleapis.com/maps/api/geocode/json?address=' . $final_address . '&key=AIzaSyCpUfYECkxluIkMJpQtdbFBpxiFn2xEQD8');
                         if($geocodeFromAddr->getStatusCode() == 200){
                             $output = json_decode($geocodeFromAddr->getBody());
                             $data['formatted_address'] = $data['latitude'] = $data['longitude'] = '';
