@@ -46,7 +46,7 @@ class UpdateProperty implements ShouldQueue
      */
     public function handle()
     {
-        Log::info('queue Start');
+        Log::info('Update Property queue Start');
         try {
             $Matrix_Unique_ID = $this->Matrix_Unique_ID;
             $rets_login_url = "http://rets.las.mlsmatrix.com/rets/login.ashx";
@@ -60,7 +60,7 @@ class UpdateProperty implements ShouldQueue
                 $query = "(Matrix_Unique_ID={$Matrix_Unique_ID})";
                 $search = $rets->Search("Property", "Listing", $query, array("StandardNames" => 0));
                 $listing = $search[0];
-                Log::info('Get Result from Rets');
+                //Log::info('Get Result from Rets');
                 if (isset($listing['BathsHalf']) && $listing['BathsHalf'] != '') {
                     $BathsHalf = $listing['BathsHalf'];
                 } else {
@@ -455,7 +455,7 @@ class UpdateProperty implements ShouldQueue
                     }
                 }
                 //Update Property Additional
-                Log::info('Property Additional');
+                //Log::info('Property Additional');
                 $is_property_additional = PropertyAdditional::where('Matrix_Unique_ID', '=', $listing['Matrix_Unique_ID'])->first();
                 if ($is_property_additional) {
                     $is_property_additional->MLSNumber = $listing['MLSNumber'];
@@ -531,7 +531,7 @@ class UpdateProperty implements ShouldQueue
                     $propertyadditional->YearRoundSchoolYN = $YearRoundSchoolYN;
                     $propertyadditional->save();
                 }
-                Log::info('Property External');
+                //Log::info('Property External');
                 //Update Property External feature
                 $is_property_external_feature = PropertyExternalFeature::where('Matrix_Unique_ID', '=', $listing['Matrix_Unique_ID'])->first();
                 if ($is_property_external_feature) {
@@ -593,7 +593,7 @@ class UpdateProperty implements ShouldQueue
                     $propertyexternalfeature->ParkingDescription = $listing['ParkingDescription'];
                     $propertyexternalfeature->save();
                 }
-                Log::info('Property Feature');
+                //Log::info('Property Feature');
                 //Update Property Feature
                 $is_property_feature = PropertyFeature::where('Matrix_Unique_ID', '=', $listing['Matrix_Unique_ID'])->first();
                 if ($is_property_feature) {
@@ -615,7 +615,7 @@ class UpdateProperty implements ShouldQueue
                     $propertyfeature->MLSNumber = $listing['MLSNumber'];
                     $propertyfeature->save();
                 }
-                Log::info('property_financial_details');
+                //Log::info('property_financial_details');
                 //Update property_financial_details
                 $is_property_financial_detail = PropertyFinancialDetail::where('Matrix_Unique_ID', '=', $listing['Matrix_Unique_ID'])->first();
                 if ($is_property_financial_detail) {
@@ -655,7 +655,7 @@ class UpdateProperty implements ShouldQueue
                     $propertyfinancialdetail->SIDLIDYN = $SIDLIDYN;
                     $propertyfinancialdetail->save();
                 }
-                Log::info('Update Images');
+                //Log::info('Update Images');
                 //Update Images
                 $photos = $rets->GetObject("Property", "LargePhoto", $listing['Matrix_Unique_ID'], "*", 0);
                 $deleteImage = PropertyImage::where('Matrix_Unique_ID', '=', $listing['Matrix_Unique_ID'])->delete();
@@ -693,7 +693,7 @@ class UpdateProperty implements ShouldQueue
                     $propertyimage->ContentDesc = $ContentDescription;
                     $propertyimage->save();
                 }
-                Log::info('property_interior_features');
+                //Log::info('property_interior_features');
                 //Update property_interior_features
                 $is_property_interior_feature = PropertyInteriorFeature::where('Matrix_Unique_ID', '=', $listing['Matrix_Unique_ID'])->first();
                 if ($is_property_interior_feature) {
@@ -763,7 +763,7 @@ class UpdateProperty implements ShouldQueue
                     $propertyfinancialdetail->Water = $listing['Water'];
                     $propertyfinancialdetail->save();
                 }
-                Log::info('Property Location');
+                //Log::info('Property Location');
                 //Update Property Location
                 $is_property_location = PropertyLocation::where('Matrix_Unique_ID', '=', $listing['Matrix_Unique_ID'])->first();
                 if ($is_property_location) {
