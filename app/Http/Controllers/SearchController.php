@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\ImportData;
+use App\UpdateLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use phRETS;
@@ -44,10 +45,27 @@ class SearchController extends Controller
             if ($connect) {
                 $cityList = Citylist::orderBy('id', 'desc')->get();
                 $count = 0;
+                $oldLog = UpdateLog::orderBy('lastLogTime','DESC')->first();
+                $newLog = new UpdateLog();
+                $newLog->lastLogTime = date('Y-m-d\TH:i:s');
+                $totalRecords = 0 ;
+                if($oldLog == ''){
+                    $propertyDetails = PropertyDetail::orderBy('updated_at','ASC')->first();
+                    if($propertyDetails != '') {
+                        $time = date('Y-m-d\TH:i:s',strtotime($propertyDetails->updated_at));
+                    }
+                } else {
+                    $time = $oldLog->lastLogTime;
+                }
                 foreach ($cityList as $list) {
-                    $query_city = "(City={$list->name})";
+                    if(isset($time)){
+                        $query_city = "(City={$list->name}),(LastChangeTimestamp={$time}+)";
+                    } else {
+                        $query_city = "(City={$list->name})";
+                    }
                     $search_query = $rets->SearchQuery("Property", "Listing", $query_city, array("StandardNames" => 0));
                     $result_count_city = $rets->TotalRecordsFound();
+                    $totalRecords = $totalRecords + (int)$result_count_city;
                     $update_city = Citylist::find($list->id);
                     $update_city->total = $result_count_city;
                     $update_city->updated_at = Date('Y-m-d');
@@ -63,7 +81,10 @@ class SearchController extends Controller
                         }
                         $count++;
                     }
+                    $rets->FreeResult($search_query);
                 }
+                $newLog->totalRecords = $totalRecords;
+                $newLog->save();
             }
         } catch (\Exception $e) {
             return 'error controller !! ' . $e->getMessage();
@@ -111,7 +132,27 @@ class SearchController extends Controller
 
     public function test()
     {
-        dd('here');
+        dd(date('Y-m-d\TH:i:s'));
+        $rets_login_url = "http://rets.las.mlsmatrix.com/rets/login.ashx";
+        $rets_username = "neal";
+        $rets_password = "glvar";
+        $rets = new \phRETS();
+        $rets->AddHeader("RETS-Version", "RETS/1.7.2");
+        $connect = $rets->Connect($rets_login_url, $rets_username, $rets_password);
+        if ($connect) {
+            $cityList = Citylist::where('name', 'LASVEGAS')->get();
+            $count = 0;
+            foreach ($cityList as $list) {
+                $query_city = "(City={$list->name}),(LastChangeTimestamp=2018-02-05T00:00:00+)";
+                $search_query = $rets->SearchQuery("Property", "Listing", $query_city, array("StandardNames" => 0));
+                $result_count_city = $rets->TotalRecordsFound();
+                while ($listing = $rets->FetchRow($search_query)) {
+                    $count++;
+                }
+                $rets->FreeResult($search_query);
+                dd($result_count_city);
+            }
+        }
 
     }
 

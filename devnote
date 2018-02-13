@@ -47,3 +47,5 @@ Rets api V6.4.1 stable released to dev
 Rets api V6.4.2 stable released to dev
 	1.dalete un-used Logs from jobs.
 	2.Fix Queue
+Rets api V6.4.3 stable released to dev
+	1. Created commands based on last log time
