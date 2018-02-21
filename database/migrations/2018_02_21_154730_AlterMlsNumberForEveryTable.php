@@ -14,33 +14,33 @@ class AlterMlsNumberForEveryTable extends Migration
     public function up()
     {
       Schema::table('property_details', function (Blueprint $table) {
-          $table->string('MLSNumber')->index()->unique()->change();
-          $table->string('updated_at')->index()->unique()->change();
+          $table->char('MLSNumber',20)->index()->unique()->change();
+          $table->timestamp('updated_at')->index()->change();
       });
       Schema::table('property_additionals', function (Blueprint $table) {
-          $table->string('MLSNumber')->index()->unique()->change();
-          $table->string('PublicAddressYN')->index()->change();
+          $table->char('MLSNumber',20)->index()->unique()->change();
+          $table->char('PublicAddressYN',20)->index()->change();
       });
       Schema::table('property_external_features', function (Blueprint $table) {
-          $table->string('MLSNumber')->index()->unique()->change();
+          $table->char('MLSNumber',20)->index()->unique()->change();
       });
       Schema::table('property_features', function (Blueprint $table) {
-          $table->string('MLSNumber')->index()->unique()->change();
+          $table->char('MLSNumber',20)->index()->unique()->change();
       });
       Schema::table('property_financial_details', function (Blueprint $table) {
-          $table->string('MLSNumber')->index()->unique()->change();
+          $table->char('MLSNumber',20)->index()->unique()->change();
       });
       Schema::table('property_interior_features', function (Blueprint $table) {
-          $table->string('MLSNumber')->index()->unique()->change();
+          $table->char('MLSNumber',20)->index()->unique()->change();
       });
       Schema::table('property_lat_longs', function (Blueprint $table) {
-          $table->string('MLSNumber')->index()->unique()->change();
+          $table->char('MLSNumber',20)->index()->unique()->change();
       });
       Schema::table('property_locations', function (Blueprint $table) {
-          $table->string('MLSNumber')->index()->unique()->change();
+          $table->char('MLSNumber',20)->index()->unique()->change();
       });
       Schema::table('property_images', function (Blueprint $table) {
-        $table->string('MLSNumber')->index()->change();
+        $table->char('MLSNumber',20)->index()->change();
       });
     }
 
