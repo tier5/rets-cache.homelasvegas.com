@@ -38,6 +38,11 @@ Route::group(['prefix' => 'rets/v2'],function (){
     Route::get('printable_flyer/{matrix_unique_id}', 'ApiControllerV2@printableFlyer');
 });
 Route::group(['prefix' => 'rets/v3'],function (){
+    Route::get('global_search',"ApiControllerV2@globalSearch");
+    Route::get('rets_search',"ApiControllerV2@retsSearch");
+    Route::get('advance_search','ApiControllerV2@advanceSearch');
+    Route::get('address_search', 'ApiControllerV2@addressSearch');
+    Route::get('advance_listing', 'ApiControllerV2@advanceListing');
     Route::get('view_more/{MLSNumber}','ApiControllerV3@viewMore');
     Route::get('photo_gallery/{MLSNumber}','ApiControllerV3@photoGallery');
     Route::get('mortgage_cal/{MLSNumber}', 'ApiControllerV3@mortgageCalculator');
