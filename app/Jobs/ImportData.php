@@ -31,11 +31,13 @@ class ImportData implements ShouldQueue
     public $city;
     public $limit;
     public $offset;
-    public function __construct($city,$limit,$offset)
+    public $query_city;
+    public function __construct($city,$limit,$offset,$query_city)
     {
         $this->city = $city;
         $this->limit = $limit;
         $this->offset = $offset;
+        $this->query_city = $query_city;
         ini_set('max_execution_time', 30000000);
         set_time_limit(0);
         ini_set('memory_limit', '2048M');
@@ -48,7 +50,7 @@ class ImportData implements ShouldQueue
      */
     public function handle()
     {
-        Log::info('Import Data Queue Start for '.$this->city.' from '.$this->offset);
+        Log::info('Import Data Queue Start for '.$this->city.'  query =  '.$this->query_city.' from '.$this->offset);
         try {
             $search_result = array();
             $data = array();
@@ -96,7 +98,7 @@ class ImportData implements ShouldQueue
                 Log::info('connected');
                 if ($this->city != "") {
                     $data['city'] = $this->city;
-                    $query = "(City={$this->city})";
+                    $query = $this->query_city;
                 }
                 $limit = 10;
                 $offset = 1;
@@ -113,8 +115,10 @@ class ImportData implements ShouldQueue
                 $total_records = $pages = ceil($result_count / $limit);
                 $search_result = array();
                 $key = 0;
+                $rowCount = 0;
                 while ($listing = $rets->FetchRow($search)) {
                     try{
+                        $rowCount++;
                         $photos = $rets->GetObject("Property", "LargePhoto", $listing['Matrix_Unique_ID'], "*", 0);
                         $deleteImage = PropertyImage::where('Matrix_Unique_ID', '=', $listing['Matrix_Unique_ID'])->delete();
                         $contentType = $property_image = '';
@@ -778,6 +782,6 @@ class ImportData implements ShouldQueue
         } catch (\Exception $e) {
             Log::info('error job !! ' . $e->getMessage());
         }
-        Log::info('Your Queue is finish');
+        Log::info('Your Queue is finish. And total data inserted = '.$rowCount);
     }
 }

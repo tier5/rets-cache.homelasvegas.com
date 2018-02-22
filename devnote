@@ -50,8 +50,10 @@ Rets api V6.4.2 stable released to dev
 Rets api V6.4.3 stable released to dev
 	1. Created commands based on last log time
 Rets api V6.4.4 stable released to dev
-		1. MLS number indexed
+	1. MLS number indexed
 Rets api V6.4.5 stable released to dev
-		1. MLS number indexed
+	1. MLS number indexed
 Rets api V6.4.6 stable released to dev
-				1. MLS number indexed
+	1. MLS number indexed
+Rets api V6.4.8 stable released to dev
+	1. Released MLSNumber search 

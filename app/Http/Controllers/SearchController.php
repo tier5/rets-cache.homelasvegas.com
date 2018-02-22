@@ -55,7 +55,7 @@ class SearchController extends Controller
                         $time = date('Y-m-d\TH:i:s',strtotime($propertyDetails->updated_at));
                     }
                 } else {
-                    $time = $oldLog->lastLogTime;
+                    $time = date('Y-m-d\TH:i:s',strtotime($oldLog->lastLogTime));
                 }
                 foreach ($cityList as $list) {
                     if(isset($time)){
@@ -67,16 +67,16 @@ class SearchController extends Controller
                     $result_count_city = $rets->TotalRecordsFound();
                     $totalRecords = $totalRecords + (int)$result_count_city;
                     $update_city = Citylist::find($list->id);
-                    $update_city->total = $result_count_city;
+                    //$update_city->total = $result_count_city;
                     $update_city->updated_at = Date('Y-m-d');
                     if ($update_city->save()) {
                         if($result_count_city > 4000){
                             for($i=0;$i<=$result_count_city;$i=$i+4000){
-                                $job = (new ImportData($list->name,4000,$i));
+                                $job = (new ImportData($list->name,4000,$i,$query_city));
                                 Bus::dispatch($job);
                             }
                         } else {
-                            $job = (new ImportData($list->name,4000,0));
+                            $job = (new ImportData($list->name,4000,0,$query_city));
                             Bus::dispatch($job);
                         }
                         $count++;

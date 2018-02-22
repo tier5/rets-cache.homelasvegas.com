@@ -37,3 +37,9 @@ Route::group(['prefix' => 'rets/v2'],function (){
     Route::get('mortgage_cal/{matrix_unique_id}', 'ApiControllerV2@mortgageCalculator');
     Route::get('printable_flyer/{matrix_unique_id}', 'ApiControllerV2@printableFlyer');
 });
+Route::group(['prefix' => 'rets/v3'],function (){
+    Route::get('view_more/{MLSNumber}','ApiControllerV3@viewMore');
+    Route::get('photo_gallery/{MLSNumber}','ApiControllerV3@photoGallery');
+    Route::get('mortgage_cal/{MLSNumber}', 'ApiControllerV3@mortgageCalculator');
+    Route::get('printable_flyer/{MLSNumber}', 'ApiControllerV3@printableFlyer');
+});
