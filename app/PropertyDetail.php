@@ -46,4 +46,9 @@ class PropertyDetail extends Model
     {
         return $this->hasOne('App\PropertyLocation', 'Matrix_Unique_ID', 'Matrix_Unique_ID');
     }
+
+    public function PropertyMiscellaneous()
+    {
+        return $this->hasOne('App\PropertyMiscellaneous','Matrix_Unique_ID','Matrix_Unique_ID');
+    }
 }

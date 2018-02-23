@@ -41,8 +41,9 @@ class ImportData extends Command
     public function handle()
     {
         try {
+            Log::info('Queue Started');
             $cont = SearchController::importData();
-            Log::info('Property Queue Created');
+            Log::info('Queue Created');
         } catch (\Exception $e) {
             Log::info('error controller !! ' . $e->getMessage());
         }
