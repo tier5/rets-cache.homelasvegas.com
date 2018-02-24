@@ -21,26 +21,26 @@ class ApiControllerV2 extends Controller
             }
             if ($request->has('city')) {
                 $property = PropertyDetail::where('City', $request->city)
-                    ->with(['propertyfeature', 'propertyadditional', 'propertyexternalfeature', 'propertyimage', 'propertyfinancialdetail', 'propertyinteriorfeature', 'propertyinteriorfeature', 'propertylatlong', 'propertylocation'])
+                    ->with(['propertyfeature', 'propertyadditional', 'propertyexternalfeature', 'propertyimage', 'propertyfinancialdetail', 'propertyinteriorfeature', 'propertyinteriorfeature', 'propertylatlong', 'propertylocation','PropertyMiscellaneous'])
                     ->paginate($perPage);
             } elseif ($request->has('postal_code')) {
                 $property = PropertyDetail::where('PostalCode', $request->postal_code)
-                    ->with(['propertyfeature', 'propertyadditional', 'propertyexternalfeature', 'propertyimage', 'propertyfinancialdetail', 'propertyinteriorfeature', 'propertyinteriorfeature', 'propertylatlong', 'propertylocation'])
+                    ->with(['propertyfeature', 'propertyadditional', 'propertyexternalfeature', 'propertyimage', 'propertyfinancialdetail', 'propertyinteriorfeature', 'propertyinteriorfeature', 'propertylatlong', 'propertylocation','PropertyMiscellaneous'])
                     ->paginate($perPage);
             } elseif ($request->has('address')) {
                 $property = PropertyDetail::where('PublicAddress', $request->address)
-                    ->with(['propertyfeature', 'propertyadditional', 'propertyexternalfeature', 'propertyimage', 'propertyfinancialdetail', 'propertyinteriorfeature', 'propertyinteriorfeature', 'propertylatlong', 'propertylocation'])
+                    ->with(['propertyfeature', 'propertyadditional', 'propertyexternalfeature', 'propertyimage', 'propertyfinancialdetail', 'propertyinteriorfeature', 'propertyinteriorfeature', 'propertylatlong', 'propertylocation','PropertyMiscellaneous'])
                     ->paginate($perPage);
             } elseif ($request->has('search_community')) {
                 $search_community = $request->search_community;
                 $property = PropertyDetail::WhereHas('propertylocation', function ($query) use ($search_community) {
                     $query->where('CommunityName', $search_community);
                 })
-                    ->with(['propertyfeature', 'propertyadditional', 'propertyexternalfeature', 'propertyimage', 'propertyfinancialdetail', 'propertyinteriorfeature', 'propertyinteriorfeature', 'propertylatlong', 'propertylocation'])
+                    ->with(['propertyfeature', 'propertyadditional', 'propertyexternalfeature', 'propertyimage', 'propertyfinancialdetail', 'propertyinteriorfeature', 'propertyinteriorfeature', 'propertylatlong', 'propertylocation','PropertyMiscellaneous'])
                     ->paginate($perPage);
             } elseif ($request->has('listing_id')) {
                 $property = PropertyDetail::where('MLSNumber', $request->listing_id)
-                    ->with(['propertyfeature', 'propertyadditional', 'propertyexternalfeature', 'propertyimage', 'propertyfinancialdetail', 'propertyinteriorfeature', 'propertyinteriorfeature', 'propertylatlong', 'propertylocation'])
+                    ->with(['propertyfeature', 'propertyadditional', 'propertyexternalfeature', 'propertyimage', 'propertyfinancialdetail', 'propertyinteriorfeature', 'propertyinteriorfeature', 'propertylatlong', 'propertylocation','PropertyMiscellaneous'])
                     ->paginate($perPage);
             } else {
                 return response()->json([
@@ -141,7 +141,7 @@ class ApiControllerV2 extends Controller
                 $searchResult->orderBy($sortbyfield,$sorttype);
             }
             $result = $searchResult
-                ->with(['propertyfeature', 'propertyadditional', 'propertyexternalfeature', 'propertyimage', 'propertyfinancialdetail', 'propertyinteriorfeature', 'propertyinteriorfeature', 'propertylatlong', 'propertylocation'])
+                ->with(['propertyfeature', 'propertyadditional', 'propertyexternalfeature', 'propertyimage', 'propertyfinancialdetail', 'propertyinteriorfeature', 'propertyinteriorfeature', 'propertylatlong', 'propertylocation', 'PropertyMiscellaneous'])
                 ->paginate($perPage);
             if(count($result) > 0){
                 return response()->json([
@@ -268,7 +268,7 @@ class ApiControllerV2 extends Controller
                 $searchResult->orderBy($sortbyfield,$sorttype);
             }
             $result = $searchResult
-                ->with(['propertyfeature', 'propertyadditional', 'propertyexternalfeature', 'propertyimage', 'propertyfinancialdetail', 'propertyinteriorfeature', 'propertyinteriorfeature', 'propertylatlong', 'propertylocation'])
+                ->with(['propertyfeature', 'propertyadditional', 'propertyexternalfeature', 'propertyimage', 'propertyfinancialdetail', 'propertyinteriorfeature', 'propertyinteriorfeature', 'propertylatlong', 'propertylocation', 'PropertyMiscellaneous'])
                 ->paginate($perPage);
             if(count($result) > 0){
                 return response()->json([
@@ -358,7 +358,7 @@ class ApiControllerV2 extends Controller
                 //Later
             }
             $searchResult = $search
-                ->with(['propertyfeature', 'propertyadditional', 'propertyexternalfeature', 'propertyimage', 'propertyfinancialdetail', 'propertyinteriorfeature', 'propertyinteriorfeature', 'propertylatlong', 'propertylocation'])
+                ->with(['propertyfeature', 'propertyadditional', 'propertyexternalfeature', 'propertyimage', 'propertyfinancialdetail', 'propertyinteriorfeature', 'propertyinteriorfeature', 'propertylatlong', 'propertylocation', 'PropertyMiscellaneous'])
                 ->paginate($perPage);
             if(count($searchResult) > 0){
                 return response()->json([
@@ -390,7 +390,7 @@ class ApiControllerV2 extends Controller
             if($request->has('listing_id')){
                 $listingId =explode(',',$request->listing_id);
                 $property = PropertyDetail::whereIn('MLSNumber',$listingId)
-                    ->with(['propertyfeature', 'propertyadditional', 'propertyexternalfeature', 'propertyimage', 'propertyfinancialdetail', 'propertyinteriorfeature', 'propertyinteriorfeature', 'propertylatlong', 'propertylocation'])
+                    ->with(['propertyfeature', 'propertyadditional', 'propertyexternalfeature', 'propertyimage', 'propertyfinancialdetail', 'propertyinteriorfeature', 'propertyinteriorfeature', 'propertylatlong', 'propertylocation', 'PropertyMiscellaneous'])
                     ->paginate($perPage);
                 if(count($property) > 0){
                     return response()->json([
@@ -421,7 +421,7 @@ class ApiControllerV2 extends Controller
     {
         try {
             $PropertyLocation = PropertyDetail::where('Matrix_Unique_ID', '=', $matrix_unique_id)
-                ->with(['propertyfeature', 'propertyadditional', 'propertyexternalfeature', 'propertyimage', 'propertyfinancialdetail', 'propertyinteriorfeature', 'propertyinteriorfeature', 'propertylatlong', 'propertylocation'])
+                ->with(['propertyfeature', 'propertyadditional', 'propertyexternalfeature', 'propertyimage', 'propertyfinancialdetail', 'propertyinteriorfeature', 'propertyinteriorfeature', 'propertylatlong', 'propertylocation', 'PropertyMiscellaneous'])
                 ->first();
             if (count($PropertyLocation->propertyimage) < 3) {
                 $this->updateGalary($matrix_unique_id);
@@ -506,7 +506,7 @@ class ApiControllerV2 extends Controller
     {
         try{
             $propertyPrintable = PropertyDetail::where('Matrix_Unique_ID', '=', $matrix_unique_id)
-                ->with(['propertyfeature', 'propertyadditional', 'propertyexternalfeature', 'propertyimage', 'propertyfinancialdetail', 'propertyinteriorfeature', 'propertyinteriorfeature', 'propertylatlong', 'propertylocation'])
+                ->with(['propertyfeature', 'propertyadditional', 'propertyexternalfeature', 'propertyimage', 'propertyfinancialdetail', 'propertyinteriorfeature', 'propertyinteriorfeature', 'propertylatlong', 'propertylocation', 'PropertyMiscellaneous'])
                 ->first();
             $this->thresholdCheck($matrix_unique_id);
             if($propertyPrintable != null){

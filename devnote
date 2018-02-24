@@ -63,3 +63,6 @@ Rets api V7.0.0 released to dev
 	Created fileds to create a database
 Rets api V7.0.1 stable released to dev
 	Created migration for property_miscellaneous table
+RETS api V8.0 stable released to dev
+	Modified RETS api data with more data
+	Added more migrations

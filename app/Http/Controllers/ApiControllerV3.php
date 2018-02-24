@@ -26,7 +26,7 @@ class ApiControllerV3 extends Controller
                   'hasImage' => false
               ],200);
           } else {
-              $this->thresholdCheck($matrix_unique_id);
+              $this->thresholdCheck($PropertyLocation->Matrix_Unique_ID);
               return response()->json([
                   'success' => true,
                   'message' => 'Database Images',

@@ -18,6 +18,14 @@ use App\PropertyFinancialDetail;
 use App\PropertyInteriorFeature;
 use App\PropertyLocation;
 use App\PropertyLatLong;
+use App\PropertyMiscellaneous;
+use App\PropertyAdditionalDetail;
+use App\PropertyAdditionalFeature;
+use App\PropertyFinancialAdditional;
+use App\PropertyInsurance;
+use App\PropertyInteriorDetail;
+use App\PropertyOtherInformation;
+use App\PropertySellingDetails;
 
 class ImportData implements ShouldQueue
 {
@@ -729,6 +737,391 @@ class ImportData implements ShouldQueue
                             $propertylocation->TaxDistrict = $listing['TaxDistrict'];
                             $propertylocation->save();
                         }
+                        //property Miscellaneous
+                        try {
+                            $is_property_misscellaneous = PropertyMiscellaneous::where('Matrix_Unique_ID',$listing['Matrix_Unique_ID'])->first();
+                            if($is_property_misscellaneous == '') {
+                                $is_property_misscellaneous = new PropertyMiscellaneous();
+                                $is_property_misscellaneous->Matrix_Unique_ID = $listing['Matrix_Unique_ID'];
+                                $is_property_misscellaneous->MLSNumber = $listing['MLSNumber'];
+                            }
+                            $is_property_misscellaneous->NetAcres = $listing['NetAcres'];
+                            $is_property_misscellaneous->NODDate = (isset($listing['NODDate']) && $listing['NODDate'] == '') ? null : $listing['NODDate'];
+                            $is_property_misscellaneous->NOI = $listing['NOI'];
+                            $is_property_misscellaneous->NumberofFurnishedUnits = $listing['NumberofFurnishedUnits'];
+                            $is_property_misscellaneous->NumberofPets = $listing['NumberofPets'];
+                            $is_property_misscellaneous->NumBldgs = $listing['NumBldgs'];
+                            $is_property_misscellaneous->NumFloors = $listing['NumFloors'];
+                            $is_property_misscellaneous->NumGAcres = $listing['NumGAcres'];
+                            $is_property_misscellaneous->NumLoft = $listing['NumLoft'];
+                            $is_property_misscellaneous->NumofLoftAreas = $listing['NumofLoftAreas'];
+                            $is_property_misscellaneous->NumofParkingSpacesIncluded = $listing['NumofParkingSpacesIncluded'];
+                            $is_property_misscellaneous->NumParcels = $listing['NumParcels'];
+                            $is_property_misscellaneous->NumParking = $listing['NumParking'];
+                            $is_property_misscellaneous->NumStorageUnits = $listing['NumStorageUnits'];
+                            $is_property_misscellaneous->NumTerraces = $listing['NumTerraces'];
+                            $is_property_misscellaneous->NumUnits = $listing['NumUnits'];
+                            $is_property_misscellaneous->OnSiteStaff = isset($listing['OnSiteStaff']) && $listing['OnSiteStaff'] ? $listing['OnSiteStaff'] : 0;
+                            $is_property_misscellaneous->Range = $listing['Range'];
+                            $is_property_misscellaneous->RATIO_ClosePrice_By_ListPrice = $listing['RATIO_ClosePrice_By_ListPrice'];
+                            $is_property_misscellaneous->RATIO_ClosePrice_By_OriginalListPrice = $listing['RATIO_ClosePrice_By_OriginalListPrice'];
+                            $is_property_misscellaneous->RefrigeratorDescription = $listing['RefrigeratorDescription'];
+                            $is_property_misscellaneous->RentedPrice = $listing['RentedPrice'];
+                            $is_property_misscellaneous->RentRange = $listing['RentRange'];
+                            $is_property_misscellaneous->StreetDirPrefix = $listing['StreetDirPrefix'];
+                            $is_property_misscellaneous->StreetDirSuffix = $listing['StreetDirSuffix'];
+                            $is_property_misscellaneous->StreetSuffix = $listing['StreetSuffix'];
+                            $is_property_misscellaneous->StudioYN = isset($listing['StudioYN']) && $listing['StudioYN'] != '' ? $listing['StudioYN'] : '';
+                            $is_property_misscellaneous->Style = $listing['Style'];
+                            $is_property_misscellaneous->SubjecttoFIRPTAYN = isset($listing['SubjecttoFIRPTAYN']) && $listing['SubjecttoFIRPTAYN'] ? $listing['SubjecttoFIRPTAYN'] : 0;
+                            $is_property_misscellaneous->YearlyOperatingExpense = $listing['YearlyOperatingExpense'];
+                            $is_property_misscellaneous->YearlyOperatingIncome = $listing['YearlyOperatingIncome'];
+                            $is_property_misscellaneous->YearlyOtherIncome = $listing['YearlyOtherIncome'];
+                            $is_property_misscellaneous->YrsRemaining = $listing['YrsRemaining'];
+                            $is_property_misscellaneous->save();
+                        } catch (\Exception $me) {
+                            Log::info("Error in Property Miscellaneous : " .$me->getMessage());
+                        }
+                        
+                        // Property Additional Detail 
+                        try {
+                            $is_property_additional_details = PropertyAdditionalDetail::where('Matrix_Unique_ID',$listing['Matrix_Unique_ID'])->first();
+                            if($is_property_additional_details == '') {
+                                $is_property_additional_details = new PropertyAdditionalDetail();
+                                $is_property_additional_details->Matrix_Unique_ID = $listing['Matrix_Unique_ID'];
+                                $is_property_additional_details->MLSNumber = $listing['MLSNumber'];
+                            }
+                            $is_property_additional_details->BedandBathDownYN = isset($listing['BedandBathDownYN']) && $listing['BedandBathDownYN'] != '' ? $listing['BedandBathDownYN'] : 0;
+                            $is_property_additional_details->BedsTotal = $listing['BedsTotal'];
+                            $is_property_additional_details->BlockNumber = $listing['BlockNumber'];
+                            $is_property_additional_details->BonusSOYN = isset($listing['BonusSOYN']) && $listing['BonusSOYN'] != '' ? $listing['BonusSOYN'] : 0;
+                            $is_property_additional_details->BrandedVirtualTour = $listing['BrandedVirtualTour'];
+                            $is_property_additional_details->BuildingNumber = $listing['BuildingNumber'];
+                            $is_property_additional_details->BuyerPremium = $listing['BuyerPremium'];
+                            $is_property_additional_details->CableAvailable = isset($listing['CableAvailable']) && $listing['CableAvailable'] != '' ? $listing['CableAvailable'] : 0;
+                            $is_property_additional_details->CapRate = $listing['CapRate'];
+                            $is_property_additional_details->CarportDescription = $listing['CarportDescription'];
+                            $is_property_additional_details->Carports = $listing['Carports'];
+                            $is_property_additional_details->CashtoAssume = $listing['CashtoAssume'];
+                            $is_property_additional_details->CleaningDeposit = $listing['CleaningDeposit'];
+                            $is_property_additional_details->CleaningRefund = $listing['CleaningRefund'];
+                            $is_property_additional_details->CloseDate = (isset($listing['CloseDate']) && $listing['CloseDate'] == '') ? null : $listing['CloseDate'];
+                            $is_property_additional_details->ClosePrice = $listing['ClosePrice'];
+                            $is_property_additional_details->CompactorYN = isset($listing['CompactorYN']) && $listing['CompactorYN'] != '' ? $listing['CompactorYN'] : 0;
+                            $is_property_additional_details->ConditionalDate = (isset($listing['ConditionalDate']) && $listing['ConditionalDate'] == '') ? null : $listing['ConditionalDate'];
+                            $is_property_additional_details->CondoConversionYN = isset($listing['CondoConversionYN']) && $listing['CondoConversionYN'] != '' ? $listing['CondoConversionYN'] : 0;
+//                            Log::info('ConstructionEstimateEnd value :'. $listing['ConstructionEstimateEnd']);
+                            $is_property_additional_details->ConstructionEstimateEnd = isset($listing['ConstructionEstimateEnd']) && $listing['ConstructionEstimateEnd'] != '' ? $listing['ConstructionEstimateEnd'] : 0 ;
+                            $is_property_additional_details->ConstructionEstimateStart = (isset($listing['ConstructionEstimateStart']) && $listing['ConstructionEstimateStart'] == '') ? null : $listing['ConstructionEstimateStart'];
+                            $is_property_additional_details->ContingencyDesc = $listing['ContingencyDesc'];
+                            $is_property_additional_details->ConvertedtoRealProperty = isset($listing['ConvertedtoRealProperty']) && $listing['ConvertedtoRealProperty'] != '' ? $listing['ConvertedtoRealProperty'] : 0;
+                            $is_property_additional_details->CostperUnit = $listing['CostperUnit'];
+                            $is_property_additional_details->CrossStreet = $listing['CrossStreet'];
+                            $is_property_additional_details->CurrentLoanAssumable = isset($listing['CurrentLoanAssumable']) && $listing['CurrentLoanAssumable'] != '' ? $listing['CurrentLoanAssumable'] : 0;
+                            $is_property_additional_details->DateAvailable = (isset($listing['DateAvailable']) && $listing['DateAvailable'] == '') ? null : $listing['DateAvailable'];
+                            $is_property_additional_details->Deposit = $listing['Deposit'];
+                            $is_property_additional_details->Directions = $listing['Directions'];
+                            $is_property_additional_details->DishwasherDescription = $listing['DishwasherDescription'];
+                            $is_property_additional_details->DOM = $listing['DOM'];
+                            $is_property_additional_details->DomModifier_DateTime = (isset($listing['DomModifier_DateTime']) && $listing['DomModifier_DateTime'] == '') ? null : $listing['DomModifier_DateTime'];
+                            $is_property_additional_details->DomModifier_Initial = $listing['DomModifier_Initial'];
+                            $is_property_additional_details->DomModifier_StatusRValue = $listing['DomModifier_StatusRValue'];
+                            $is_property_additional_details->DownPayment = $listing['DownPayment'];
+                            $is_property_additional_details->save();
+                        } catch (\Exception $ex) {
+                            Log::info("Error in Property Additional Detail : " .$ex->getMessage());
+                        }
+                        
+                        // Property Additional Feature
+                        try {
+                            $is_property_additional_feature = PropertyAdditionalFeature::where('Matrix_Unique_ID',$listing['Matrix_Unique_ID'])->first();
+                            if($is_property_additional_feature == '') {
+                                $is_property_additional_feature = new PropertyAdditionalFeature();
+                                $is_property_additional_feature->Matrix_Unique_ID = $listing['Matrix_Unique_ID'];
+                                $is_property_additional_feature->MLSNumber = $listing['MLSNumber'];
+                            }
+                            $is_property_additional_feature->AccessibilityFeatures = $listing['AccessibilityFeatures'];
+                            $is_property_additional_feature->ActiveOpenHouseCount = $listing['ActiveOpenHouseCount'];
+                            $is_property_additional_feature->AdditionalAUSoldTerms = $listing['AdditionalAUSoldTerms'];
+                            $is_property_additional_feature->AdditionalPetRentYN = isset($listing['AdditionalPetRentYN']) && $listing['AdditionalPetRentYN'] != '' ? $listing['AdditionalPetRentYN'] : 0;
+                            $is_property_additional_feature->AdministrationDeposit = $listing['AdministrationDeposit'];
+                            $is_property_additional_feature->AdministrationFeeYN = isset($listing['AdministrationFeeYN']) && $listing['AdministrationFeeYN'] != '' ? $listing['AdministrationFeeYN'] : 0;
+                            $is_property_additional_feature->AdministrationRefund = $listing['AdministrationRefund'];
+                            $is_property_additional_feature->AmtOwnerWillCarry = $listing['AmtOwnerWillCarry'];
+                            $is_property_additional_feature->ApplicationFeeAmount = $listing['ApplicationFeeAmount'];
+                            $is_property_additional_feature->ApplicationFeeYN = isset($listing['ApplicationFeeYN']) && $listing['ApplicationFeeYN'] != '' ? $listing['ApplicationFeeYN'] : 0;
+                            $is_property_additional_feature->ApproxAddlLivArea = $listing['ApproxAddlLivArea'];
+                            $is_property_additional_feature->AppxSubfeeAmount = $listing['AppxSubfeeAmount'];
+                            $is_property_additional_feature->AppxSubfeePymtTy = $listing['AppxSubfeePymtTy'];
+                            $is_property_additional_feature->AssessedImpValue = $listing['AssessedImpValue'];
+                            $is_property_additional_feature->AssessedLandValue = $listing['AssessedLandValue'];
+                            $is_property_additional_feature->AssessmentBalance = $listing['AssessmentBalance'];
+                            $is_property_additional_feature->AssessmentType = $listing['AssessmentType'];
+                            $is_property_additional_feature->AssessmentYN = isset($listing['AssessmentYN']) && $listing['AssessmentYN'] != '' ? $listing['AssessmentYN'] : 0;
+                            $is_property_additional_feature->AssociationFee2 = $listing['AssociationFee2'];
+                            $is_property_additional_feature->AssociationFee2MQYN = $listing['AssociationFee2MQYN'];
+                            $is_property_additional_feature->AssociationFeeMQYN = $listing['AssociationFeeMQYN'];
+                            $is_property_additional_feature->AssociationFeeYN = isset($listing['AssociationFeeYN']) && $listing['BedandBathDownYN'] != '' ? $listing['BedandBathDownYN'] : 0;
+                            $is_property_additional_feature->AssociationPhone = $listing['AssociationPhone'];
+                            $is_property_additional_feature->AuctionDate = (isset($listing['AuctionDate']) && $listing['AuctionDate'] == '') ? null : $listing['AuctionDate'];
+                            $is_property_additional_feature->AuctionType = $listing['AuctionType'];
+                            $is_property_additional_feature->save();
+                        } catch (\Exception $ex) {
+                            Log::info("Error in Property Additional Feature : " .$ex->getMessage());
+                        }
+                        
+                        // Property Financial Additional
+                        try {
+                            $is_property_financial_additional = PropertyFinancialAdditional::where('Matrix_Unique_ID',$listing['Matrix_Unique_ID'])->first();
+                            if($is_property_financial_additional == '') {
+                                $is_property_financial_additional = new PropertyFinancialAdditional();
+                                $is_property_financial_additional->Matrix_Unique_ID = $listing['Matrix_Unique_ID'];
+                                $is_property_financial_additional->MLSNumber = $listing['MLSNumber'];
+                            }
+                            $is_property_financial_additional->Electricity = $listing['Electricity'];
+                            $is_property_financial_additional->ElevatorFloorNum = $listing['ElevatorFloorNum'];
+                            $is_property_financial_additional->EnvironmentSurvey = isset($listing['EnvironmentSurvey']) && $listing['EnvironmentSurvey'] != '' ? $listing['EnvironmentSurvey'] : 0;
+                            $is_property_financial_additional->EstCloLsedt = (isset($listing['EstCloLsedt']) && $listing['EstCloLsedt'] == '') ? null : $listing['EstCloLsedt'];
+                            $is_property_financial_additional->ExistingRent = $listing['ExistingRent'];
+                            $is_property_financial_additional->ExpenseSource = $listing['ExpenseSource'];
+                            $is_property_financial_additional->ExteriorDescription = $listing['ExteriorDescription'];
+                            $is_property_financial_additional->Fireplace = isset($listing['Fireplace']) && $listing['Fireplace'] != '' ? $listing['Fireplace'] : 0;
+                            $is_property_financial_additional->FirstEncumbranceAssumable = $listing['FirstEncumbranceAssumable'];
+                            $is_property_financial_additional->FirstEncumbranceBalance = $listing['FirstEncumbranceBalance'];
+                            $is_property_financial_additional->FirstEncumbrancePayment = $listing['FirstEncumbrancePayment'];
+                            $is_property_financial_additional->FirstEncumbrancePmtDesc = $listing['FirstEncumbrancePmtDesc'];
+                            $is_property_financial_additional->FirstEncumbranceRate = $listing['FirstEncumbranceRate'];
+                            $is_property_financial_additional->FloodZone = $listing['FloodZone'];
+                            $is_property_financial_additional->FurnishedYN = isset($listing['FurnishedYN']) && $listing['FurnishedYN'] != '' ? $listing['FurnishedYN'] : 0;
+                            $is_property_financial_additional->GasDescription = $listing['GasDescription'];
+                            $is_property_financial_additional->GravelRoad = $listing['GravelRoad'];
+                            $is_property_financial_additional->GreenCertificationRating = $listing['GreenCertificationRating'];
+                            $is_property_financial_additional->GreenCertifyingBody = $listing['GreenCertifyingBody'];
+                            $is_property_financial_additional->GreenFeatures = $listing['GreenFeatures'];
+                            $is_property_financial_additional->GreenYearCertified = $listing['GreenYearCertified'];
+                            $is_property_financial_additional->GrossOperatingIncome = $listing['GrossOperatingIncome'];
+                            $is_property_financial_additional->GrossRentMultiplier = $listing['GrossRentMultiplier'];
+                            $is_property_financial_additional->GroundMountedYN = isset($listing['GroundMountedYN']) && $listing['GroundMountedYN'] != '' ? $listing['GroundMountedYN'] : 0;
+                            $is_property_financial_additional->HandicapAdapted = isset($listing['HandicapAdapted']) && $listing['HandicapAdapted'] != '' ? $listing['HandicapAdapted'] : 0;
+                            $is_property_financial_additional->HiddenFranchiseIDXOptInYN = isset($listing['HiddenFranchiseIDXOptInYN']) && $listing['HiddenFranchiseIDXOptInYN'] != '' ? $listing['HiddenFranchiseIDXOptInYN'] : 0;
+                            $is_property_financial_additional->Highlights = $listing['Highlights'];
+                            $is_property_financial_additional->HOAMinimumRentalCycle = $listing['HOAMinimumRentalCycle'];
+                            $is_property_financial_additional->HOAYN = isset($listing['HOAYN']) && $listing['HOAYN'] != '' ? $listing['HOAYN'] :  0;
+                            $is_property_financial_additional->HomeownerAssociationName = $listing['HomeownerAssociationName'];
+                            $is_property_financial_additional->HomeownerAssociationPhoneNo = $listing['HomeownerAssociationPhoneNo'];
+                            $is_property_financial_additional->HomeProtectionPlan = isset($listing['HomeProtectionPlan']) && $listing['HomeProtectionPlan'] != '' ? $listing['HomeProtectionPlan'] : 0;
+                            $is_property_financial_additional->HotWater = $listing['HotWater'];
+                            $is_property_financial_additional->IDX = $listing['IDX'];
+                            $is_property_financial_additional->IDXOptInYN = isset($listing['IDXOptInYN']) && $listing['IDXOptInYN'] != '' ? $listing['IDXOptInYN'] : 0;
+                            $is_property_financial_additional->InternetYN = isset($listing['InternetYN']) && $listing['InternetYN'] != '' ? $listing['InternetYN'] : 0;
+                            $is_property_financial_additional->JuniorSuiteunder600sqft = isset($listing['JuniorSuiteunder600sqft']) && $listing['JuniorSuiteunder600sqft'] != '' ? $listing['JuniorSuiteunder600sqft'] : 0;
+                            $is_property_financial_additional->save();
+                        } catch (\Exception $ex) {
+                            Log::info("Error in Property Financial Additional : " .$ex->getMessage());
+                        }
+                        
+                        // Property Insurance
+                        try {
+                            $is_property_insurance = PropertyInsurance::where('Matrix_Unique_ID',$listing['Matrix_Unique_ID'])->first();
+                            if($is_property_insurance == '') {
+                                $is_property_insurance = new PropertyInsurance();
+                                $is_property_insurance->Matrix_Unique_ID = $listing['Matrix_Unique_ID'];
+                                $is_property_insurance->MLSNumber = $listing['MLSNumber'];
+                            }
+                            $is_property_insurance->OnSiteStaffIncludes = $listing['OnSiteStaffIncludes'];
+                            $is_property_insurance->OriginalListPrice = $listing['OriginalListPrice'];
+                            $is_property_insurance->OtherDeposit = $listing['OtherDeposit'];
+                            $is_property_insurance->OtherEncumbranceDesc = $listing['OtherEncumbranceDesc'];
+                            $is_property_insurance->OtherIncomeDescription = $listing['OtherIncomeDescription'];
+                            $is_property_insurance->OtherRefund = $listing['OtherRefund'];
+                            $is_property_insurance->OvenFuel = $listing['OvenFuel'];
+                            $is_property_insurance->OwnerManaged = isset($listing['OwnerManaged']) && $listing['OwnerManaged'] != '' ? $listing['OwnerManaged'] : 0;
+                            $is_property_insurance->OwnersName = $listing['OwnersName'];
+                            $is_property_insurance->OwnerWillCarry = isset($listing['OwnerWillCarry']) && $listing['OwnerWillCarry'] != '' ? $listing['OwnerWillCarry'] : 0;
+                            $is_property_insurance->PackageAvailable = isset($listing['PackageAvailable']) && $listing['PackageAvailable'] != '' ? $listing['PackageAvailable'] : 0;
+                            $is_property_insurance->ParkingLevel = $listing['ParkingLevel'];
+                            $is_property_insurance->ParkingSpaceIDNum = $listing['ParkingSpaceIDNum'];
+                            $is_property_insurance->PavedRoad = $listing['PavedRoad'];
+                            $is_property_insurance->PendingDate = (isset($listing['PendingDate']) && $listing['PendingDate'] == '') ? null : $listing['PendingDate'];
+                            $is_property_insurance->PermittedPropertyManager = isset($listing['PermittedPropertyManager']) && $listing['PermittedPropertyManager'] != '' ? $listing['PermittedPropertyManager'] : 0;
+                            $is_property_insurance->PerPetYN = isset($listing['PerPetYN']) && $listing['PerPetYN'] != '' ? $listing['PerPetYN'] : 0;
+                            $is_property_insurance->PetDeposit = $listing['PetDeposit'];
+                            $is_property_insurance->PetDescription = $listing['PetDescription'];
+                            $is_property_insurance->PetRefund = $listing['PetRefund'];
+                            $is_property_insurance->PetsAllowed = isset($listing['PetsAllowed']) && $listing['PetsAllowed'] != '' ? $listing['PetsAllowed'] : 0;
+                            $is_property_insurance->PhotoExcluded = isset($listing['PhotoExcluded']) && $listing['PhotoExcluded'] != '' ? $listing['PhotoExcluded'] : 0;
+                            $is_property_insurance->PhotoInstructions = $listing['PhotoInstructions'];
+                            $is_property_insurance->PhotoModificationTimestamp = (isset($listing['PhotoModificationTimestamp']) && $listing['PhotoModificationTimestamp'] == '') ? null : $listing['PhotoModificationTimestamp'];
+                            $is_property_insurance->PoolLength = $listing['PoolLength'];
+                            $is_property_insurance->PoolWidth = $listing['PoolWidth'];
+                            $is_property_insurance->PostalCodePlus4 = $listing['PostalCodePlus4'];
+                            $is_property_insurance->PreviousParcelNumber = $listing['PreviousParcelNumber'];
+                            $is_property_insurance->PriceChangeTimestamp = (isset($listing['PriceChangeTimestamp']) && $listing['PriceChangeTimestamp'] == '') ? null : $listing['PriceChangeTimestamp'];
+                            $is_property_insurance->PriceChgDate = (isset($listing['PriceChgDate']) && $listing['PriceChgDate'] == '') ? null : $listing['PriceChgDate'];
+                            $is_property_insurance->PricePerAcre = $listing['PricePerAcre'];
+                            $is_property_insurance->PrimaryViewDirection = $listing['PrimaryViewDirection'];
+                            $is_property_insurance->ProjAmenitiesDescription = $listing['ProjAmenitiesDescription'];
+                            $is_property_insurance->PropAmenitiesDescription = $listing['PropAmenitiesDescription'];
+                            $is_property_insurance->PropertyCondition = $listing['PropertyCondition'];
+                            $is_property_insurance->PropertyInsurance = $listing['PropertyInsurance'];
+                            $is_property_insurance->ProviderKey = $listing['ProviderKey'];
+                            $is_property_insurance->ProviderModificationTimestamp = (isset($listing['ProviderModificationTimestamp']) && $listing['ProviderModificationTimestamp'] == '') ? null : $listing['ProviderModificationTimestamp'];
+                            $is_property_insurance->save();
+                        } catch (\Exception $ex) {
+                            Log::info("Error in Property Insurance : " .$ex->getMessage());
+                        }
+                        
+                        // Property Interior Detail
+                        try {
+                            $is_property_interior_details = PropertyInteriorDetail::where('Matrix_Unique_ID',$listing['Matrix_Unique_ID'])->first();
+                            if($is_property_interior_details == '') {
+                                $is_property_interior_details = new PropertyInteriorDetail();
+                                $is_property_interior_details->Matrix_Unique_ID = $listing['Matrix_Unique_ID'];
+                                $is_property_interior_details->MLSNumber = $listing['MLSNumber'];
+                            }
+                            $is_property_interior_details->KeyDeposit = $listing['KeyDeposit'];
+                            $is_property_interior_details->KeyRefund = $listing['KeyRefund'];
+                            $is_property_interior_details->KitchenCountertops = $listing['KitchenCountertops'];
+                            $is_property_interior_details->LandlordOwnerPays = $listing['LandlordOwnerPays'];
+                            $is_property_interior_details->LandUse = $listing['LandUse'];
+                            $is_property_interior_details->LastChangeTimestamp = (isset($listing['LastChangeTimestamp']) && $listing['LastChangeTimestamp'] == '') ? null : $listing['LastChangeTimestamp'];
+                            $is_property_interior_details->LastChangeType = $listing['LastChangeType'];
+                            $is_property_interior_details->LastListPrice = $listing['LastListPrice'];
+                            $is_property_interior_details->LastStatus = $listing['LastStatus'];
+                            $is_property_interior_details->LeaseDescription = $listing['LeaseDescription'];
+                            $is_property_interior_details->LeaseOptionConsideredY = isset($listing['LeaseOptionConsideredY']) && $listing['LeaseOptionConsideredY'] ? $listing['LeaseOptionConsideredY'] : 0;
+                            $is_property_interior_details->LeasePrice = $listing['LeasePrice'];
+                            $is_property_interior_details->LeedCertified = isset($listing['LeedCertified']) && $listing['LeedCertified'] != '' ? $listing['LeedCertified'] : 0;
+                            $is_property_interior_details->LegalDescription = $listing['LegalDescription'];
+                            $is_property_interior_details->Length = $listing['Length'];
+                            $is_property_interior_details->ListAgent_MUI = $listing['ListAgent_MUI'];
+                            $is_property_interior_details->ListingContractDate = (isset($listing['ListingContractDate']) && $listing['ListingContractDate'] == '') ? null : $listing['ListingContractDate'];
+                            $is_property_interior_details->ListOffice_MUI = $listing['ListOffice_MUI'];
+                            $is_property_interior_details->ListOfficeMLSID = $listing['ListOfficeMLSID'];
+                            $is_property_interior_details->ListOfficePhone = $listing['ListOfficePhone'];
+                            $is_property_interior_details->LitigationType = $listing['LitigationType'];
+                            $is_property_interior_details->Location = $listing['Location'];
+                            $is_property_interior_details->LotDepth = $listing['LotDepth'];
+                            $is_property_interior_details->LotFront = $listing['LotFront'];
+                            $is_property_interior_details->LotFrontage = $listing['LotFrontage'];
+                            $is_property_interior_details->LotNumber = $listing['LotNumber'];
+                            $is_property_interior_details->Maintenance = $listing['Maintenance'];
+                            $is_property_interior_details->Management = $listing['Management'];
+                            $is_property_interior_details->Manufactured = isset($listing['Manufactured']) && $listing['Manufactured'] != '' ? $listing['Manufactured'] : 0;
+                            $is_property_interior_details->MapDescription = $listing['MapDescription'];
+                            $is_property_interior_details->MasterBedroomDownYN = isset($listing['MasterBedroomDownYN']) && $listing['MasterBedroomDownYN'] != '' ? $listing['MasterBedroomDownYN'] : 0;
+                            $is_property_interior_details->MasterPlan = $listing['MasterPlan'];
+                            $is_property_interior_details->MatrixModifiedDT = $listing['MatrixModifiedDT'];
+                            $is_property_interior_details->MediaRoomYN = isset($listing['MediaRoomYN']) && $listing['MediaRoomYN'] != '' ? $listing['MediaRoomYN'] : 0;
+                            $is_property_interior_details->MetroMapCoorXP = $listing['MetroMapCoorXP'];
+                            $is_property_interior_details->MetroMapPageXP = $listing['MetroMapPageXP'];
+                            $is_property_interior_details->MHYrBlt = $listing['MHYrBlt'];
+                            $is_property_interior_details->MLNumofPropIfforSale = $listing['MLNumofPropIfforSale'];
+                            $is_property_interior_details->MLS = $listing['MLS'];
+                            $is_property_interior_details->save();
+                        } catch (\Exception $ex) {
+                            Log::info("Error in Property Interior Detail : " .$ex->getMessage());
+                        }
+                        
+                        // Property Other Information
+                        try {
+                            $is_property_other_information = PropertyOtherInformation::where('Matrix_Unique_ID',$listing['Matrix_Unique_ID'])->first();
+                            if($is_property_other_information == '') {
+                                $is_property_other_information = new PropertyOtherInformation();
+                                $is_property_other_information->Matrix_Unique_ID = $listing['Matrix_Unique_ID'];
+                                $is_property_other_information->MLSNumber = $listing['MLSNumber'];
+                            }
+                            $is_property_other_information->RentTermsDescription = $listing['RentTermsDescription'];
+                            $is_property_other_information->Road = $listing['Road'];
+                            $is_property_other_information->StateOrProvince = $listing['StateOrProvince'];
+                            $is_property_other_information->StatusChangeTimestamp = (isset($listing['StatusChangeTimestamp']) && $listing['StatusChangeTimestamp'] == '') ? null : $listing['StatusChangeTimestamp'];
+                            $is_property_other_information->StatusContractualSearchDate = (isset($listing['StatusContractualSearchDate']) && $listing['StatusContractualSearchDate'] == '') ? null : $listing['StatusContractualSearchDate'];
+                            $is_property_other_information->StatusUpdate = (isset($listing['StatusUpdate']) && $listing['StatusUpdate'] == '') ? null : $listing['StatusUpdate'];
+                            $is_property_other_information->StorageSecure = isset($listing['StorageSecure']) && $listing['StorageSecure'] != '' ? $listing['StorageSecure'] : 0;
+                            $is_property_other_information->StorageUnitDesc = $listing['StorageUnitDesc'];
+                            $is_property_other_information->StorageUnitDim = $listing['StorageUnitDim'];
+                            $is_property_other_information->Table = $listing['Table'];
+                            $is_property_misscellaneous->TempOffMarketDate = (isset($listing['TempOffMarketDate']) && $listing['TempOffMarketDate'] == '') ? null : $listing['TempOffMarketDate'];
+                            $is_property_other_information->TerraceLocation = $listing['TerraceLocation'];
+                            $is_property_other_information->TerraceTotalSqft = $listing['TerraceTotalSqft'];
+                            $is_property_other_information->TerrainDescription = $listing['TerrainDescription'];
+                            $is_property_other_information->TotalFloors = $listing['TotalFloors'];
+                            $is_property_other_information->TotalNumofParkingSpaces = $listing['TotalNumofParkingSpaces'];
+                            $is_property_other_information->TowerName = $listing['TowerName'];
+                            $is_property_other_information->Town = $listing['Town'];
+                            $is_property_other_information->Township = $listing['Township'];
+                            $is_property_other_information->TransactionType = $listing['TransactionType'];
+                            $is_property_other_information->Trash = $listing['Trash'];
+                            $is_property_other_information->TStatusDate = (isset($listing['TStatusDate']) && $listing['TStatusDate'] == '') ? null : $listing['TStatusDate'];
+                            $is_property_other_information->TypeOwnerWillCarry = $listing['TypeOwnerWillCarry'];
+                            $is_property_other_information->UnitCount = $listing['UnitCount'];
+                            $is_property_other_information->UnitDescription = $listing['UnitDescription'];
+                            $is_property_other_information->UnitNumber = $listing['UnitNumber'];
+                            $is_property_other_information->UnitPoolIndoorYN = isset($listing['UnitPoolIndoorYN']) && $listing['UnitPoolIndoorYN'] != '' ? $listing['UnitPoolIndoorYN'] : 0;
+                            $is_property_other_information->UnitSpaIndoor = isset($listing['UnitSpaIndoor']) && $listing['UnitSpaIndoor'] != '' ? $listing['UnitSpaIndoor'] : 0;;
+                            $is_property_other_information->Utilities = $listing['Utilities'];
+                            $is_property_other_information->UtilitiesIncl = $listing['UtilitiesIncl'];
+                            $is_property_other_information->Views = $listing['Views'];
+                            $is_property_other_information->Washer = $listing['Washer'];
+                            $is_property_other_information->WasherDryerDescription = $listing['WasherDryerDescription'];
+                            $is_property_other_information->WasherDryerIncluded = $listing['WasherDryerIncluded'];
+                            $is_property_other_information->WaterHeaterDescription = $listing['WaterHeaterDescription'];
+                            $is_property_other_information->WeightLimit = $listing['WeightLimit'];
+                            $is_property_other_information->Width = $listing['Width'];
+                            $is_property_other_information->ZoningAuthority = $listing['ZoningAuthority'];
+                            $is_property_other_information->save();
+                        } catch (\Exception $ex) {
+                            Log::info("Error in Property Other Information : " .$ex->getMessage());
+                        }
+                        
+                        // Property Selling Details
+                        try {
+                            $is_property_selling_details = PropertySellingDetails::where('Matrix_Unique_ID',$listing['Matrix_Unique_ID'])->first();
+                            if($is_property_selling_details == '') {
+                                $is_property_selling_details = new PropertySellingDetails();
+                                $is_property_selling_details->Matrix_Unique_ID = $listing['Matrix_Unique_ID'];
+                                $is_property_selling_details->MLSNumber = $listing['MLSNumber'];
+                            }
+                            $is_property_selling_details->SaleOfficeBonusYN = isset($listing['SaleOfficeBonusYN']) && $listing['SaleOfficeBonusYN'] != '' ? $listing['SaleOfficeBonusYN'] : 0;
+                            $is_property_selling_details->SaleType = $listing['SaleType'];
+                            $is_property_selling_details->SecondEncumbranceAssumable = $listing['SecondEncumbranceAssumable'];
+                            $is_property_selling_details->SecondEncumbranceBalance = $listing['SecondEncumbranceBalance'];
+                            $is_property_selling_details->SecondEncumbrancePayment = $listing['SecondEncumbrancePayment'];
+                            $is_property_selling_details->SecondEncumbrancePmtDesc = $listing['SecondEncumbrancePmtDesc'];
+                            $is_property_selling_details->SecondEncumbranceRate = $listing['SecondEncumbranceRate'];
+                            $is_property_selling_details->Section = $listing['Section'];
+                            $is_property_selling_details->Section8ConsideredYN = isset($listing['Section8ConsideredYN']) && $listing['Section8ConsideredYN'] != '' ? $listing['Section8ConsideredYN'] : 0;
+                            $is_property_selling_details->Security = $listing['Security'];
+                            $is_property_selling_details->SecurityDeposit = $listing['SecurityDeposit'];
+                            $is_property_selling_details->SecurityRefund = $listing['SecurityRefund'];
+                            $is_property_selling_details->SellerContribution = $listing['SellerContribution'];
+                            $is_property_selling_details->SellingAgent_MUI = $listing['SellingAgent_MUI'];
+                            $is_property_selling_details->SellingAgentDirectWorkPhone = $listing['SellingAgentDirectWorkPhone'];
+                            $is_property_selling_details->SellingAgentFullName = $listing['SellingAgentFullName'];
+                            $is_property_selling_details->SellingAgentMLSID = $listing['SellingAgentMLSID'];
+                            $is_property_selling_details->SellingOffice_MUI = $listing['SellingOffice_MUI'];
+                            $is_property_selling_details->SellingOfficeMLSID = $listing['SellingOfficeMLSID'];
+                            $is_property_selling_details->SellingOfficeName = $listing['SellingOfficeName'];
+                            $is_property_selling_details->SellingOfficePhone = $listing['SellingOfficePhone'];
+                            $is_property_selling_details->SeparateMeter = $listing['SeparateMeter'];
+                            $is_property_selling_details->ServiceContractInc = $listing['ServiceContractInc'];
+                            $is_property_selling_details->ServicesAvailableOnSite = $listing['ServicesAvailableOnSite'];
+                            $is_property_selling_details->ShowingAgentPublicID = $listing['ShowingAgentPublicID'];
+                            $is_property_selling_details->SIDLIDAnnualAmount = $listing['SIDLIDAnnualAmount'];
+                            $is_property_selling_details->SIDLIDBalance = $listing['SIDLIDBalance'];
+                            $is_property_selling_details->SoldAppraisal_NUMBER = $listing['SoldAppraisal_NUMBER'];
+                            $is_property_selling_details->SoldBalloonAmt = $listing['SoldBalloonAmt'];
+                            $is_property_selling_details->SoldBalloonDue = $listing['SoldBalloonDue'];
+                            $is_property_selling_details->SoldDownPayment = $listing['SoldDownPayment'];
+                            $is_property_selling_details->SoldLeaseDescription = $listing['SoldLeaseDescription'];
+                            $is_property_selling_details->SoldOWCAmt = $listing['SoldOWCAmt'];
+                            $is_property_selling_details->SoldTerm = $listing['SoldTerm'];
+                            $is_property_selling_details->OffMarketDate = (isset($listing['OffMarketDate']) && $listing['OffMarketDate'] == '') ? null : $listing['OffMarketDate'];
+                            $is_property_selling_details->save();
+                        } catch (\Exception $ex) {
+                            Log::info("Error in Property Selling Details : " .$ex->getMessage());
+                        }
+
                         $is_property_latlong = PropertyLatLong::where('Matrix_Unique_ID',$listing['Matrix_Unique_ID'])->first();
                         if($is_property_latlong == '' && $listing['PublicAddressYN'] == 1 && $listing['PublicAddress'] != ''){
                             try{

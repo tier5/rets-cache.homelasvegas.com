@@ -4,9 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class PropertyMiscellaneous extends Model
+class PropertyOtherInformation extends Model
 {
-    protected $table = 'property_miscellaneous';
+    protected $table = 'property_other_informations';
 
     public function propertydetail()
     {
