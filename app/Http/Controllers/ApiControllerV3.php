@@ -15,7 +15,12 @@ class ApiControllerV3 extends Controller
   {
       try {
           $PropertyLocation = PropertyDetail::where('MLSNumber',$MLSNumber)
-              ->with(['propertyfeature', 'propertyadditional', 'propertyexternalfeature', 'propertyimage', 'propertyfinancialdetail', 'propertyinteriorfeature', 'propertyinteriorfeature', 'propertylatlong', 'propertylocation'])
+              ->with(['propertyfeature', 'propertyadditional', 'propertyexternalfeature',
+                  'propertyimage', 'propertyfinancialdetail', 'propertyinteriorfeature',
+                  'propertyinteriorfeature', 'propertylatlong', 'propertylocation',
+                  'PropertyMiscellaneous','PropertyAdditionalFeature','PropertyAdditionalDetail',
+                  'PropertyInteriorDetail','PropertyFinancialAdditional','PropertyOtherInformation',
+                  'PropertyInsurance','PropertySellingDetails'])
               ->first();
           if (count($PropertyLocation->propertyimage) < 3) {
               $this->updateGalary($PropertyLocation->Matrix_Unique_ID);
@@ -100,7 +105,12 @@ class ApiControllerV3 extends Controller
   {
       try{
           $propertyPrintable = PropertyDetail::where('MLSNumber',$MLSNumber)
-              ->with(['propertyfeature', 'propertyadditional', 'propertyexternalfeature', 'propertyimage', 'propertyfinancialdetail', 'propertyinteriorfeature', 'propertyinteriorfeature', 'propertylatlong', 'propertylocation'])
+              ->with(['propertyfeature', 'propertyadditional', 'propertyexternalfeature',
+                  'propertyimage', 'propertyfinancialdetail', 'propertyinteriorfeature',
+                  'propertyinteriorfeature', 'propertylatlong', 'propertylocation',
+                  'PropertyMiscellaneous','PropertyAdditionalFeature','PropertyAdditionalDetail',
+                  'PropertyInteriorDetail','PropertyFinancialAdditional','PropertyOtherInformation',
+                  'PropertyInsurance','PropertySellingDetails'])
               ->first();
           $this->thresholdCheck($propertyPrintable->Matrix_Unique_ID);
           if($propertyPrintable != null){

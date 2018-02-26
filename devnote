@@ -66,3 +66,6 @@ Rets api V7.0.1 stable released to dev
 RETS api V8.0 stable released to dev
 	Modified RETS api data with more data
 	Added more migrations
+RETS api V8.1 stable released to dev
+    Modified RETS api as data not coming from RETS.
+    Modified api for data send to word press.

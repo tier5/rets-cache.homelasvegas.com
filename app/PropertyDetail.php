@@ -51,4 +51,39 @@ class PropertyDetail extends Model
     {
         return $this->hasOne('App\PropertyMiscellaneous','Matrix_Unique_ID','Matrix_Unique_ID');
     }
+
+    public function PropertyAdditionalFeature()
+    {
+        return $this->hasOne('App\PropertyAdditionalFeature','Matrix_Unique_ID','Matrix_Unique_ID');
+    }
+
+    public function PropertyAdditionalDetail()
+    {
+        return $this->hasOne('App\PropertyAdditionalDetail','Matrix_Unique_ID','Matrix_Unique_ID');
+    }
+
+    public function PropertyInteriorDetail()
+    {
+        return $this->hasOne('App\PropertyInteriorDetail','Matrix_Unique_ID','Matrix_Unique_ID');
+    }
+
+    public function PropertyFinancialAdditional()
+    {
+        return $this->hasOne('App\PropertyFinancialAdditional','Matrix_Unique_ID','Matrix_Unique_ID');
+    }
+
+    public function PropertyOtherInformation()
+    {
+        return $this->hasOne('App\PropertyOtherInformation','Matrix_Unique_ID','Matrix_Unique_ID');
+    }
+
+    public function PropertyInsurance()
+    {
+        return $this->hasOne('App\PropertyInsurance','Matrix_Unique_ID','Matrix_Unique_ID');
+    }
+
+    public function PropertySellingDetails()
+    {
+        return $this->hasOne('App\PropertySellingDetails','Matrix_Unique_ID','Matrix_Unique_ID');
+    }
 }

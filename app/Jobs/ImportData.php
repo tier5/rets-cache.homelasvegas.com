@@ -543,7 +543,7 @@ class ImportData implements ShouldQueue
                             $is_property_additional->PropertyDescription = $listing['PropertyDescription'];
                             $is_property_additional->PropertySubType = $listing['PropertySubType'];
                             $is_property_additional->PublicAddress = $listing['PublicAddress'];
-                            $is_property_additional->PublicAddressYN = $listing['PublicAddressYN'];
+                            $is_property_additional->PublicAddressYN = isset($listing['PublicAddressYN']) && $listing['PublicAddressYN'] != '' ? $listing['PublicAddressYN'] : 0;
                             $is_property_additional->PublicRemarks = $listing['PublicRemarks'];
                             $is_property_additional->ListAgentMLSID = $listing['ListAgentMLSID'];
                             $is_property_additional->ListAgentFullName = $listing['ListAgentFullName'];
@@ -581,7 +581,7 @@ class ImportData implements ShouldQueue
                             $propertyadditional->PropertyDescription = $listing['PropertyDescription'];
                             $propertyadditional->PropertySubType = $listing['PropertySubType'];
                             $propertyadditional->PublicAddress = $listing['PublicAddress'];
-                            $propertyadditional->PublicAddressYN = $listing['PublicAddressYN'];
+                            $propertyadditional->PublicAddressYN = isset($listing['PublicAddressYN']) && $listing['PublicAddressYN'] != '' ? $listing['PublicAddressYN'] : 0;
                             $propertyadditional->PublicRemarks = $listing['PublicRemarks'];
                             $propertyadditional->ListAgentMLSID = $listing['ListAgentMLSID'];
                             $propertyadditional->ListAgentFullName = $listing['ListAgentFullName'];
