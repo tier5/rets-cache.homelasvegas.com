@@ -132,6 +132,9 @@ class ImportData implements ShouldQueue
                         $contentType = $property_image = '';
                         $content_id = $object_id = $Success = 0;
                         foreach ($photos as $keyImage => $photo) {
+                            if ($keyImage > 0) {
+                                break;
+                            }
                             if (isset($photo['Content-ID']) && $photo['Content-ID'] != '') {
                                 $content_id = $photo['Content-ID'];
                             }
@@ -165,9 +168,6 @@ class ImportData implements ShouldQueue
                             $propertyimage->Encoded_image = $property_image;
                             $propertyimage->ContentDesc = $ContentDescription;
                             $propertyimage->save();
-                            if ($keyImage > 0) {
-                                break;
-                            }
                         }
                         if (isset($listing['BathsHalf']) && $listing['BathsHalf'] != '') {
                             $BathsHalf = $listing['BathsHalf'];
