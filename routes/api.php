@@ -24,6 +24,8 @@ Route::group(array('prefix' => 'rets/v1'), function () {
     Route::get('mortgage_cal/{matrix_unique_id}', 'APIController@mortgage_calculator');
     Route::get('printable_flyer/{matrix_unique_id}', 'APIController@printable_flyer');
     Route::get('test/{Matrix_Unique_ID}','APIController@thresholdCheck');
+    Route::get('global_search',"APIController@globalSearch");
+    Route::get('global_listings_search',"APIController@globalListingSearch");
 });
 
 Route::group(['prefix' => 'rets/v2'],function (){
@@ -36,7 +38,9 @@ Route::group(['prefix' => 'rets/v2'],function (){
     Route::get('photo_gallery/{matrix_unique_id}','ApiControllerV2@photoGallery');
     Route::get('mortgage_cal/{matrix_unique_id}', 'ApiControllerV2@mortgageCalculator');
     Route::get('printable_flyer/{matrix_unique_id}', 'ApiControllerV2@printableFlyer');
+    Route::get('global_listings_search',"ApiControllerV2@globalListingSearch");
 });
+
 Route::group(['prefix' => 'rets/v3'],function (){
     Route::get('global_search',"ApiControllerV2@globalSearch");
     Route::get('rets_search',"ApiControllerV2@retsSearch");
@@ -47,4 +51,5 @@ Route::group(['prefix' => 'rets/v3'],function (){
     Route::get('photo_gallery/{MLSNumber}','ApiControllerV3@photoGallery');
     Route::get('mortgage_cal/{MLSNumber}', 'ApiControllerV3@mortgageCalculator');
     Route::get('printable_flyer/{MLSNumber}', 'ApiControllerV3@printableFlyer');
+    Route::get('global_listings_search',"ApiControllerV3@globalListingSearch");
 });
