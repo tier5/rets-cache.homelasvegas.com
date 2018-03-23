@@ -57,14 +57,9 @@ class ImportLVPropertyImages implements ShouldQueue
                     $rowCount++;
 
                     $photos = $rets->GetObject("Property", "LargePhoto", $listing['Matrix_Unique_ID'], "*", 0);
-
+                    PropertyImage::where('Matrix_Unique_ID', '=', $listing['Matrix_Unique_ID'])->delete();
+                    
                     foreach ($photos as $key => $photo) {
-                        PropertyImage::where('ContentId', '=', $photo['Content-ID'])->delete();
-                    } //endforeach
-
-                    foreach ($photos as $key => $photo) {
-
-                    //echo '<img src="data:image/gif;base64,'.base64_encode($photo['Data']).'"/>';
                     
                     
                     if (isset($photo['Content-ID']) && $photo['Content-ID'] != '') {
