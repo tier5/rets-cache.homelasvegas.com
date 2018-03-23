@@ -28,7 +28,7 @@ class LvimagesController extends Controller
             		 $job = (new ImportLVPropertyImages(4000,$i));
                                 Bus::dispatch($job);
             	}
-            $rets->FreeResult($search_query);
+            $rets->FreeResult($search);
             return "completed";
         }
     }
