@@ -72,3 +72,6 @@ RETS api V8.1 stable released to dev
 
 RETS api V9.0 stable released to dev
     Added new api endpoint (global_listings_search) for chat bot application with all active status listings
+
+RETS api V10.0 stable released to dev
+	Implemented import images job for lasvegas city

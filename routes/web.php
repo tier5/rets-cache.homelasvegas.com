@@ -40,3 +40,5 @@ Route::get('sample-restful-apis', function () {
     );
 });
 Route::get('import-data','SearchController@importData');
+
+Route::get('lvimages','LvimagesController@index');
