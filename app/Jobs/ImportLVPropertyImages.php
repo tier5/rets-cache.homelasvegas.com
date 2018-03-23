@@ -112,7 +112,7 @@ class ImportLVPropertyImages implements ShouldQueue
                  } //endwhile
             } //endif 
 
-            $rets->FreeResult($search_query);
+            $rets->FreeResult($search);
             Log::info('Job finished !! ');
         } catch (\Exception $e) {
             Log::info('error job !! ' . $e->getMessage());

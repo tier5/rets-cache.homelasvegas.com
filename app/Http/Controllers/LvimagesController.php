@@ -28,71 +28,8 @@ class LvimagesController extends Controller
             		 $job = (new ImportLVPropertyImages(4000,$i));
                                 Bus::dispatch($job);
             	}
-
-
-            	$search_result = array();
-                $key = 0;
-                $rowCount = 0;
-            	 while ($listing = $rets->FetchRow($search)) {
-
-            	 	$rowCount++;
-
-            	 	$photos = $rets->GetObject("Property", "LargePhoto", $listing['Matrix_Unique_ID'], "*", 0);
-
-            	 	foreach ($photos as $key => $photo) {
-            	 		PropertyImage::where('ContentId', '=', $photo['Content-ID'])->delete();
-            	 	} //endforeach
-
-            	 	foreach ($photos as $key => $photo) {
-
-					//echo '<img src="data:image/gif;base64,'.base64_encode($photo['Data']).'"/>';
-            	 	
-            	 	
-    	 			if (isset($photo['Content-ID']) && $photo['Content-ID'] != '') {
-                        $content_id = $photo['Content-ID'];
-   
-                    }
-                    if (isset($photo['Object-ID']) && $photo['Object-ID'] != '') {
-                        $object_id = $photo['Object-ID'];
-                    }
-                    if (isset($photo['Success']) && $photo['Success'] != '') {
-                        $Success = $photo['Success'];
-                    }
-                    if ($photo['Success'] == true && isset($photo['Content-Type']) && $photo['Content-Type'] != '') {
-                        $contentType = $photo['Content-Type'];
-                        $property_image = base64_encode($photo['Data']);
-                        $search_result[$key]['contentType'] = $photo['Content-Type'];
-                        $search_result[$key]['property_image'] = $photo['Data'];
-                    } else {
-                        $search_result[$key]['contentType'] = '';
-                        $search_result[$key]['property_image'] = '';
-                    }
-
-                    if (isset($listing['Content-Description']) && $listing['Content-Description'] != '') {
-                        $ContentDescription = $listing['Content-Description'];
-                    } else {
-                        $ContentDescription = '';
-                    }
-
-            	 	
-
-                    $propertyimage = new PropertyImage();
-                    $propertyimage->Matrix_Unique_ID = $listing['Matrix_Unique_ID'];
-                    $propertyimage->MLSNumber = $listing['MLSNumber'];
-                    $propertyimage->ContentId = $photo['Content-ID'];
-                    $propertyimage->ObjectId = $photo['Object-ID'];
-                    $propertyimage->Success = $photo['Success'];
-                    $propertyimage->ContentType = $photo['Content-Type'];
-                    $propertyimage->Encoded_image = base64_encode($photo['Data']);
-                    $propertyimage->ContentDesc = $ContentDescription;
-                    $propertyimage->save();
-
-
-					} //endforeach
-
-            	 } //endwhile
-            } //endif 
-            
             $rets->FreeResult($search_query);
+            return "completed";
+        }
     }
 }
