@@ -280,7 +280,7 @@ class ApiControllerV3 extends Controller
                 Log::info('connect');
                 $listing = PropertyDetail::where('MLSNumber',$listing_id)->first();
                 $photos = $rets->GetObject("Property", "LargePhoto", $listing->Matrix_Unique_ID, "*", 0);
-                $deleteImage = PropertyImage::where('Matrix_Unique_ID', '=', $listing->MLSNumber)->delete();
+                $deleteImage = PropertyImage::where('Matrix_Unique_ID', '=', $listing->Matrix_Unique_ID)->delete();
                 $contentType = $property_image = '';
                 $content_id = $object_id = $Success = 0;
                 foreach ($photos as $photo) {
