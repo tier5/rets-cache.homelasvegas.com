@@ -52,4 +52,5 @@ Route::group(['prefix' => 'rets/v3'],function (){
     Route::get('mortgage_cal/{MLSNumber}', 'ApiControllerV3@mortgageCalculator');
     Route::get('printable_flyer/{MLSNumber}', 'ApiControllerV3@printableFlyer');
     Route::get('global_listings_search',"ApiControllerV3@globalListingSearch");
+    Route::get('property/{MLSNumber}/images',"ApiControllerV3@propertyImagesByListingID");
 });

@@ -75,3 +75,6 @@ RETS api V9.0 stable released to dev
 
 RETS api V10.0 stable released to dev
 	Implemented import images job for lasvegas city
+
+RETS api V11.0 stable released to dev
+	Added one api endpoint for fetching records from MLS database and store into rets cache db based on listing number

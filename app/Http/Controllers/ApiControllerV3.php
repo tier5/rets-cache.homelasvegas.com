@@ -6,11 +6,24 @@ use Illuminate\Http\Request;
 use App\Jobs\InsertImages;
 use App\Jobs\UpdateProperty;
 use App\PropertyDetail;
+use App\PropertyImage;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use phRETS;
 
 class ApiControllerV3 extends Controller
 {
+    /*
+     * Setting executoin time and memory_limit during intialization of class
+     */
+    
+    public function __construct() {
+        ini_set('max_execution_time', 30000000);
+        set_time_limit(0);
+        ini_set('memory_limit', '256M');
+
+    }
+    
   public function viewMore($MLSNumber)
   {
       try {
@@ -246,6 +259,72 @@ class ApiControllerV3 extends Controller
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+    
+    /*
+     * @function : propertyImagesByListingID
+     * @params : listing_id
+     * @Return : Array || Boolean | Return all images based on listing id
+     */
+    public function propertyImagesByListingID($listing_id){
+        try {
+            $rets_login_url = "http://rets.las.mlsmatrix.com/rets/login.ashx";
+            $rets_username = "neal";
+            $rets_password = "glvar";
+            $rets = new phRETS;
+            $rets->AddHeader("RETS-Version", "RETS/1.7.2");
+            $connect = $rets->Connect($rets_login_url, $rets_username, $rets_password);
+            if ($connect) {
+                Log::info('connect');
+                $listing = PropertyDetail::where('MLSNumber',$listing_id)->first();
+                $photos = $rets->GetObject("Property", "LargePhoto", $listing->Matrix_Unique_ID, "*", 0);
+                $deleteImage = PropertyImage::where('Matrix_Unique_ID', '=', $listing->MLSNumber)->delete();
+                $contentType = $property_image = '';
+                $content_id = $object_id = $Success = 0;
+                foreach ($photos as $photo) {
+                    if (isset($photo['Content-ID']) && $photo['Content-ID'] != '') {
+                        $content_id = $photo['Content-ID'];
+                    }
+                    if (isset($photo['Object-ID']) && $photo['Object-ID'] != '') {
+                        $object_id = $photo['Object-ID'];
+                    }
+                    if (isset($photo['Success']) && $photo['Success'] != '') {
+                        $Success = $photo['Success'];
+                    }
+                    if ($photo['Success'] == true && isset($photo['Content-Type']) && $photo['Content-Type'] != '') {
+                        $contentType = $photo['Content-Type'];
+                        $property_image = base64_encode($photo['Data']);
+                    } else {
+                        $contentType = '';
+                        $property_image = '';
+                    }
+                    if (isset($photo['Content-Description']) && $photo['Content-Description'] != '') {
+                        $ContentDescription = $photo['Content-Description'];
+                    } else {
+                        $ContentDescription = '';
+                    }
+                    $propertyimage = new PropertyImage();
+                    $propertyimage->Matrix_Unique_ID = $listing->Matrix_Unique_ID;
+                    $propertyimage->MLSNumber = $listing->MLSNumber;
+                    $propertyimage->ContentId = $content_id;
+                    $propertyimage->ObjectId = $object_id;
+                    $propertyimage->Success = $Success;
+                    $propertyimage->ContentType = $contentType;
+                    $propertyimage->Encoded_image = $property_image;
+                    $propertyimage->ContentDesc = $ContentDescription;
+                    $propertyimage->save();
+                }
+                return response()->json([
+                    'success' => TRUE,
+                    'message' => 'Images are successfully imported'
+                ], 200);
+            }
+        } catch (\Exception $ex){
+            return response()->json([
+                'success' => false,
+                'message' => $ex->getMessage()
             ], 500);
         }
     }
